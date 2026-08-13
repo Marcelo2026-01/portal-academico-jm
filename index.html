@@ -1,0 +1,2272 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plataforma de Estudos - Produção do Conhecimento</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+        .option-btn {
+            transition: all 0.2s ease-in-out;
+        }
+        .option-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .correct {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
+            color: #065f46 !important;
+        }
+        .incorrect {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .fade-in {
+            animation: fadeIn 0.4s ease-in-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9; 
+            border-radius: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+        details > summary {
+            list-style: none;
+        }
+        details > summary::-webkit-details-marker {
+            display: none;
+        }
+        .badge-status-pending { background-color: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+        .badge-status-reviewing { background-color: #fef3c7; color: #9a3412; border: 1px solid #fcd34d; }
+        .badge-status-corrected { background-color: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div class="w-full max-w-5xl bg-white rounded-2xl shadow-xl overflow-hidden relative" id="app-container">
+        
+        <!-- ========================================== -->
+        <!-- MENU PRINCIPAL (HOME) -->
+        <!-- ========================================== -->
+        <div id="home-screen" class="p-8 md:p-12 text-center fade-in">
+            <div class="w-20 h-20 bg-indigo-100 text-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-sm rotate-3">
+                <svg class="w-10 h-10 -rotate-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+            </div>
+            <h1 class="text-3xl md:text-4xl font-extrabold text-gray-800 mb-4 tracking-tight">Plataforma de Estudos</h1>
+            <p class="text-gray-500 mb-10 text-lg max-w-2xl mx-auto">Bem-vindo(a). Escolha como você deseja consolidar seu aprendizado hoje:</p>
+            
+            <div class="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+                
+                <!-- Botão Guias de Estudo -->
+                <button onclick="showStudyGuidesMenu()" class="group text-left p-6 bg-white border-2 border-gray-200 rounded-2xl hover:border-indigo-500 hover:shadow-lg transition-all duration-300 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-50 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-110"></div>
+                    <div class="relative z-10">
+                        <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center mb-4">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                        </div>
+                        <h2 class="text-xl font-bold text-gray-800 mb-2">Guias de Estudo</h2>
+                        <p class="text-gray-500 text-sm">Aprenda a teoria de forma didática com resumos e conceitos-chave.</p>
+                    </div>
+                </button>
+
+                <!-- Botão Simulado -->
+                <button onclick="showQuizModesMenu()" class="group text-left p-6 bg-white border-2 border-gray-200 rounded-2xl hover:border-emerald-500 hover:shadow-lg transition-all duration-300 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-50 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-110"></div>
+                    <div class="relative z-10">
+                        <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center mb-4">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <h2 class="text-xl font-bold text-gray-800 mb-2">Fazer Simulado</h2>
+                        <p class="text-gray-500 text-sm">Pratique com o banco de 51 questões para testar seu conhecimento.</p>
+                    </div>
+                </button>
+
+                <!-- Botão Revisão de Erros -->
+                <button onclick="showErrorDashboard()" class="group text-left p-6 bg-white border-2 border-gray-200 rounded-2xl hover:border-amber-500 hover:shadow-lg transition-all duration-300 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-amber-50 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-110"></div>
+                    <div class="relative z-10">
+                        <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-xl flex items-center justify-center mb-4">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                        </div>
+                        <h2 class="text-xl font-bold text-gray-800 mb-2">Revisar Erros</h2>
+                        <p class="text-gray-500 text-sm">Acompanhe seu desempenho e refaça as questões que você errou.</p>
+                    </div>
+                </button>
+
+                <button onclick="showPerformance()" class="group text-left p-6 bg-white border-2 border-gray-200 rounded-2xl hover:border-blue-500 hover:shadow-lg transition-all duration-300 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-bl-full -mr-10 -mt-10 transition-transform group-hover:scale-110"></div>
+                    <div class="relative z-10">
+                        <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center mb-4">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                        </div>
+                        <h2 class="text-xl font-bold text-gray-800 mb-2">Meu Desempenho</h2>
+                        <p class="text-gray-500 text-sm">Analise suas métricas, pontos fortes e o que precisa revisar.</p>
+                    </div>
+                </button>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- HEADER (SIMULADO) -->
+        <!-- ========================================== -->
+        <div id="header" class="hidden bg-white border-b border-gray-100 sticky top-0 z-20 shadow-sm">
+            <div class="p-4 px-6 md:px-8 flex justify-between items-center">
+                <button onclick="showHome()" class="text-gray-500 hover:text-indigo-600 font-medium text-sm flex items-center gap-1 transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                    Voltar
+                </button>
+                <div id="question-counter" class="font-bold text-gray-700 text-sm bg-gray-100 px-3 py-1 rounded-full"></div>
+            </div>
+            <!-- ProgressBar -->
+            <div class="w-full bg-gray-100 h-1.5">
+                <div id="progress-bar" class="bg-indigo-500 h-1.5 transition-all duration-300 ease-out" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- LISTA DE GUIAS DE ESTUDO -->
+        <!-- ========================================== -->
+        <div id="study-guides-menu" class="hidden p-6 md:p-8 h-[85vh] overflow-y-auto custom-scrollbar fade-in bg-gray-50">
+            <div class="mb-8">
+                <button onclick="showHome()" class="text-gray-500 hover:text-indigo-600 font-medium text-sm flex items-center gap-1 transition-colors mb-4">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                    Voltar ao Menu Principal
+                </button>
+                <h2 class="text-2xl font-extrabold text-gray-800 tracking-tight flex items-center gap-2">
+                    <svg class="w-6 h-6 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                    Guias de Estudo
+                </h2>
+                <p class="text-gray-500 text-sm mt-1">Selecione uma unidade para revisar o conteúdo didático.</p>
+            </div>
+            <div id="guides-list-container" class="grid sm:grid-cols-2 gap-4">
+                <!-- Preenchido via JS -->
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- MENU DE MODOS DE SIMULADO -->
+        <!-- ========================================== -->
+        <div id="quiz-modes-menu" class="hidden p-6 md:p-8 h-[85vh] overflow-y-auto custom-scrollbar fade-in bg-gray-50">
+            <div class="mb-8">
+                <button onclick="showHome()" class="text-gray-500 hover:text-indigo-600 font-medium text-sm flex items-center gap-1 transition-colors mb-4">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                    Voltar ao Menu Principal
+                </button>
+                <h2 class="text-2xl font-extrabold text-gray-800 tracking-tight flex items-center gap-2">
+                    <svg class="w-6 h-6 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Preparação para Prova
+                </h2>
+                <p class="text-gray-500 text-sm mt-1">Escolha como deseja praticar. As questões são embaralhadas para testar seu conhecimento real.</p>
+            </div>
+
+            <div class="bg-emerald-600 text-white p-6 rounded-2xl shadow-md hover:bg-emerald-700 transition-colors cursor-pointer mb-8 flex flex-col md:flex-row items-center justify-between gap-4" onclick="startQuiz('geral')">
+                <div>
+                    <h3 class="text-xl font-bold mb-1 flex items-center gap-2">📝 Simulado Geral</h3>
+                    <p class="text-emerald-100 text-sm">Mistura questões de todas as Unidades para simular a prova oficial.</p>
+                </div>
+                <div class="bg-white/20 px-4 py-2 rounded-xl font-bold whitespace-nowrap">
+                    Iniciar Simulado &rarr;
+                </div>
+            </div>
+
+            <h3 class="text-lg font-extrabold text-gray-800 tracking-tight border-b border-gray-200 pb-2 mb-6">📚 Revisão por Tema</h3>
+            <div id="theme-list-container" class="space-y-6 pb-10">
+                <!-- Preenchido dinamicamente via JS -->
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- VISUALIZADOR DE GUIA DE ESTUDO -->
+        <!-- ========================================== -->
+        <div id="study-guide-viewer" class="hidden p-0 h-[85vh] flex flex-col fade-in">
+            <div class="bg-indigo-600 text-white p-4 px-6 flex justify-between items-center shadow-md z-10 shrink-0">
+                <h2 id="guide-viewer-title" class="font-bold text-lg truncate pr-4">Título do Guia</h2>
+                <button onclick="showStudyGuidesMenu()" class="bg-indigo-800 hover:bg-indigo-900 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-colors shrink-0">
+                    Fechar
+                </button>
+            </div>
+            <div id="guide-viewer-content" class="p-6 md:p-10 overflow-y-auto custom-scrollbar flex-1 bg-white">
+                <!-- Conteúdo HTML do guia vai aqui -->
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- TELA DO SIMULADO (QUIZ) -->
+        <!-- ========================================== -->
+        <div id="quiz-area" class="hidden p-6 md:p-10 h-[80vh] overflow-y-auto custom-scrollbar fade-in relative">
+            <div class="flex flex-wrap gap-2 mb-4">
+                <span id="unit-badge" class="bg-indigo-100 text-indigo-800 text-xs font-bold px-2.5 py-1 rounded-md border border-indigo-200">Unidade X</span>
+                <span id="theme-badge" class="bg-gray-100 text-gray-600 text-xs font-bold px-2.5 py-1 rounded-md border border-gray-200">Tema Y</span>
+            </div>
+            
+            <h2 id="question-text" class="text-xl md:text-2xl font-bold mb-8 text-gray-800 leading-snug">
+                <!-- Texto da Pergunta -->
+            </h2>
+            
+            <div id="options-container" class="space-y-3 mb-8">
+                <!-- Botões das Opções -->
+            </div>
+            
+            <div id="feedback-box" class="hidden p-5 rounded-xl mb-6 shadow-sm border">
+                <!-- Feedback (Correto/Incorreto) -->
+            </div>
+            
+            <div class="flex justify-end mt-4">
+                <button id="next-btn" class="hidden bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-xl transition-all duration-200 shadow-lg flex items-center gap-2 transform hover:-translate-y-0.5">
+                    Próxima Questão
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- TELA DE RESULTADOS DO SIMULADO -->
+        <!-- ========================================== -->
+        <div id="result-area" class="hidden p-8 md:p-12 text-center fade-in">
+            <div id="result-icon" class="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 shadow-md">
+                <!-- Ícone via JS -->
+            </div>
+            <h2 class="text-3xl font-extrabold text-gray-800 mb-2">Simulado Concluído!</h2>
+            <p id="score-message" class="text-gray-500 mb-8 text-lg font-medium"></p>
+            
+            <div class="bg-white rounded-2xl p-6 mb-8 inline-block w-full max-w-lg border-2 border-gray-100 shadow-sm">
+                <div class="text-5xl font-black text-indigo-600 mb-1" id="score-percent">0%</div>
+                <p class="text-gray-400 font-bold mb-6 uppercase tracking-wider text-xs">Aproveitamento Final</p>
+                
+                <div class="grid grid-cols-2 gap-4 text-left">
+                    <div class="bg-emerald-50/50 p-4 rounded-xl border border-emerald-100 flex flex-col items-center justify-center">
+                        <div class="text-emerald-600 font-black text-3xl" id="score-correct">0</div>
+                        <div class="text-emerald-800 text-xs font-bold mt-1 uppercase tracking-wide flex items-center gap-1">✓ Acertos</div>
+                    </div>
+                    <div class="bg-red-50/50 p-4 rounded-xl border border-red-100 flex flex-col items-center justify-center">
+                        <div class="text-red-600 font-black text-3xl" id="score-incorrect">0</div>
+                        <div class="text-red-800 text-xs font-bold mt-1 uppercase tracking-wide flex items-center gap-1">✕ Erros</div>
+                    </div>
+                </div>
+                <div class="mt-5 pt-4 border-t border-gray-100 text-sm text-gray-400 font-bold tracking-wide" id="score-total">Total: 0 questões respondidas</div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <button onclick="showErrorDashboard()" class="bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-6 rounded-xl transition-all duration-200 shadow-lg flex items-center justify-center gap-2 transform hover:-translate-y-0.5">
+                    Ir para Revisão de Erros
+                </button>
+                <button id="restart-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-xl transition-all duration-200 shadow-lg transform hover:-translate-y-0.5">
+                    Novo Simulado
+                </button>
+                <button onclick="showHome()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-3 px-8 rounded-xl transition-all duration-200">
+                    Menu Principal
+                </button>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- DASHBOARD DE REVISÃO DE ERROS -->
+        <!-- ========================================== -->
+        <div id="error-dashboard-area" class="hidden h-[85vh] flex flex-col fade-in">
+            <!-- Header -->
+            <div class="bg-amber-500 text-white p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shrink-0 shadow-md relative z-10">
+                <div>
+                    <button onclick="showHome()" class="text-amber-100 hover:text-white flex items-center gap-1 text-sm font-medium transition-colors mb-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                        Voltar ao Menu
+                    </button>
+                    <h2 class="text-2xl font-extrabold tracking-tight flex items-center gap-2">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                        Revisão de Erros
+                    </h2>
+                </div>
+                
+                <!-- Estatísticas Resumidas -->
+                <div class="flex flex-wrap gap-2 md:gap-4 w-full md:w-auto">
+                    <div class="bg-amber-600/50 rounded-lg p-2 px-4 flex-1 text-center">
+                        <p class="text-amber-100 text-xs font-bold uppercase tracking-wider">Respondidas</p>
+                        <p class="text-xl font-black" id="dash-stat-total">0</p>
+                    </div>
+                    <div class="bg-amber-600/50 rounded-lg p-2 px-4 flex-1 text-center">
+                        <p class="text-amber-100 text-xs font-bold uppercase tracking-wider">Erros</p>
+                        <p class="text-xl font-black" id="dash-stat-errors">0</p>
+                    </div>
+                    <div class="bg-white/20 rounded-lg p-2 px-4 flex-1 text-center border border-amber-400">
+                        <p class="text-amber-50 text-xs font-bold uppercase tracking-wider">Pendentes</p>
+                        <p class="text-xl font-black" id="dash-stat-pending">0</p>
+                    </div>
+                    <div class="bg-emerald-500/80 rounded-lg p-2 px-4 flex-1 text-center border border-emerald-400">
+                        <p class="text-emerald-50 text-xs font-bold uppercase tracking-wider">Corrigidas</p>
+                        <p class="text-xl font-black" id="dash-stat-corrected">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white border-b border-gray-200 px-6 py-3 flex gap-2 overflow-x-auto custom-scrollbar shrink-0">
+                <button onclick="renderErrorList('all', event)" class="dash-filter-btn px-4 py-1.5 rounded-full text-sm font-bold bg-gray-800 text-white transition-colors whitespace-nowrap">Todas</button>
+                <button onclick="renderErrorList(1, event)" class="dash-filter-btn px-4 py-1.5 rounded-full text-sm font-bold bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors whitespace-nowrap">Unidade 1</button>
+                <button onclick="renderErrorList(2, event)" class="dash-filter-btn px-4 py-1.5 rounded-full text-sm font-bold bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors whitespace-nowrap">Unidade 2</button>
+                <button onclick="renderErrorList(3, event)" class="dash-filter-btn px-4 py-1.5 rounded-full text-sm font-bold bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors whitespace-nowrap">Unidade 3</button>
+            </div>
+
+            <div id="error-list-container" class="p-6 md:p-8 overflow-y-auto custom-scrollbar bg-gray-50 flex-1 space-y-4">
+                <!-- Lista de erros gerada dinamicamente via JS -->
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- TELA DE DETALHE DA REVISÃO / REFAZER -->
+        <!-- ========================================== -->
+        <div id="error-detail-area" class="hidden p-6 md:p-8 overflow-y-auto h-[85vh] custom-scrollbar fade-in">
+            <div class="flex justify-between items-start mb-6 border-b border-gray-100 pb-4">
+                <div>
+                    <button onclick="showErrorDashboard()" class="text-gray-500 hover:text-amber-600 font-medium text-sm flex items-center gap-1 transition-colors mb-4">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                        Voltar para a Lista
+                    </button>
+                    <div class="flex flex-wrap gap-2 mb-2">
+                        <span id="detail-status-badge" class="text-xs font-bold px-2.5 py-1 rounded-md uppercase tracking-wide">Status</span>
+                        <span id="detail-unit-badge" class="bg-indigo-100 text-indigo-800 text-xs font-bold px-2.5 py-1 rounded-md border border-indigo-200">Unidade</span>
+                    </div>
+                </div>
+                <div class="text-right bg-gray-50 p-2 px-3 rounded-lg border border-gray-200 text-xs font-medium text-gray-500">
+                    <p>Tentativas: <span id="detail-attempts" class="font-bold text-gray-800">0</span></p>
+                    <p>Erros: <span id="detail-wrong" class="font-bold text-red-600">0</span> | Acertos: <span id="detail-correct" class="font-bold text-emerald-600">0</span></p>
+                </div>
+            </div>
+
+            <h3 id="detail-question-text" class="text-lg md:text-xl font-bold mb-6 text-gray-800 leading-relaxed">
+                <!-- Pergunta -->
+            </h3>
+
+            <!-- Container de Revisão Estática -->
+            <div id="detail-static-view" class="space-y-4">
+                <div class="p-5 rounded-xl border-2 border-red-200 bg-red-50 relative pt-6">
+                    <div class="absolute -top-3 left-4 bg-red-100 text-red-800 text-xs font-black px-2 py-1 rounded-md shadow-sm border border-red-200 uppercase tracking-wide">Sua última resposta</div>
+                    <div id="detail-user-answer" class="text-gray-800 font-medium text-sm md:text-base"></div>
+                </div>
+
+                <div class="p-5 rounded-xl border-2 border-emerald-200 bg-emerald-50 relative pt-6">
+                    <div class="absolute -top-3 left-4 bg-emerald-100 text-emerald-800 text-xs font-black px-2 py-1 rounded-md shadow-sm border border-emerald-200 uppercase tracking-wide">Resposta Correta</div>
+                    <div id="detail-correct-answer" class="text-gray-800 font-medium text-sm md:text-base"></div>
+                </div>
+
+                <div class="mt-6 p-6 rounded-xl border border-blue-100 bg-blue-50/50">
+                    <h4 class="font-black text-blue-800 mb-3 flex items-center gap-2 uppercase tracking-wide text-sm">💡 Entenda o Conceito</h4>
+                    <p id="detail-justification" class="text-gray-700 leading-relaxed text-sm md:text-base"></p>
+                </div>
+
+                <div class="mt-8 pt-6 border-t border-gray-100 flex justify-end">
+                    <button id="btn-start-refazer" onclick="startRefazer()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-xl transition-all duration-200 shadow-lg flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                        Refazer Questão
+                    </button>
+                </div>
+            </div>
+
+            <div id="detail-interactive-view" class="hidden">
+                <div class="bg-indigo-50 border border-indigo-100 p-4 rounded-xl mb-6 text-sm text-indigo-800 font-medium flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Você está refazendo esta questão. Isso atualizará seu histórico de tentativas.
+                </div>
+                <div id="refazer-options-container" class="space-y-3">
+                    <!-- Botões de opções via JS -->
+                </div>
+                <div id="refazer-feedback-box" class="hidden mt-6 p-5 rounded-xl border shadow-sm"></div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- ANÁLISE DE DESEMPENHO -->
+        <!-- ========================================== -->
+        <div id="performance-area" class="hidden h-[85vh] flex flex-col fade-in">
+            <!-- Header -->
+            <div class="bg-blue-600 text-white p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shrink-0 shadow-md relative z-10">
+                <div>
+                    <button onclick="showHome()" class="text-blue-100 hover:text-white flex items-center gap-1 text-sm font-medium transition-colors mb-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                        Voltar ao Menu
+                    </button>
+                    <h2 class="text-2xl font-extrabold tracking-tight flex items-center gap-2">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                        Meu Desempenho
+                    </h2>
+                </div>
+                <div class="bg-blue-800/50 rounded-lg p-3 px-5 text-center border border-blue-400">
+                    <p class="text-blue-100 text-xs font-bold uppercase tracking-wider">Aproveitamento Geral</p>
+                    <p class="text-3xl font-black" id="perf-global-percent">0%</p>
+                </div>
+            </div>
+
+            <div class="p-6 md:p-8 overflow-y-auto custom-scrollbar bg-gray-50 flex-1 space-y-8" id="perf-content-container">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+
+        <div class="relative py-4 border-t border-gray-100 bg-gray-50/50 mt-auto flex flex-col md:flex-row justify-center items-center gap-3 shrink-0">
+            <div class="text-xs font-medium text-gray-400 text-center">
+                Criado por José Marcelo dos Santos
+            </div>
+            <button onclick="openFeedbackModal()" class="md:absolute md:right-6 bg-white border border-gray-200 text-gray-600 hover:text-indigo-600 hover:border-indigo-300 hover:shadow-sm px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5">
+                💬 Enviar sugestão
+            </button>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- MODAL DE FEEDBACK -->
+        <!-- ========================================== -->
+        <div id="feedback-modal" class="hidden fixed inset-0 bg-gray-900/60 z-50 flex items-center justify-center p-4 fade-in backdrop-blur-sm">
+            <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden relative flex flex-col max-h-[90vh]">
+                
+                <div class="bg-indigo-600 text-white p-4 px-6 flex justify-between items-center shadow-md shrink-0">
+                    <h2 class="font-bold text-lg flex items-center gap-2">
+                        💬 Enviar Sugestão
+                    </h2>
+                    <button onclick="closeFeedbackModal()" class="text-indigo-200 hover:text-white transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+                
+                <div id="feedback-form-content" class="p-6 md:p-8 space-y-5 overflow-y-auto custom-scrollbar">
+                    <div>
+                        <p class="text-gray-800 font-bold mb-1">O que você achou do simulador?</p>
+                        <p class="text-gray-500 text-sm mb-4">Sua opinião ajuda a melhorar a ferramenta. Como foi sua experiência?</p>
+                        
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="selectFeedbackRating(this, 'Gostei')" class="feedback-rating-btn flex-1 bg-gray-50 border border-gray-200 text-gray-700 font-medium py-2 px-3 rounded-xl text-sm transition-all hover:border-indigo-300">😊 Gostei</button>
+                            <button onclick="selectFeedbackRating(this, 'Pode melhorar')" class="feedback-rating-btn flex-1 bg-gray-50 border border-gray-200 text-gray-700 font-medium py-2 px-3 rounded-xl text-sm transition-all hover:border-indigo-300 whitespace-nowrap">😐 Pode melhorar</button>
+                            <button onclick="selectFeedbackRating(this, 'Não gostei')" class="feedback-rating-btn flex-1 bg-gray-50 border border-gray-200 text-gray-700 font-medium py-2 px-3 rounded-xl text-sm transition-all hover:border-indigo-300">😕 Não gostei</button>
+                        </div>
+                        <div class="flex flex-wrap gap-2 mt-2">
+                            <button onclick="selectFeedbackRating(this, 'Problema')" class="feedback-rating-btn flex-1 bg-gray-50 border border-gray-200 text-gray-700 font-medium py-2 px-3 rounded-xl text-sm transition-all hover:border-indigo-300 whitespace-nowrap">🐛 Encontrei um problema</button>
+                            <button onclick="selectFeedbackRating(this, 'Ideia')" class="feedback-rating-btn flex-1 bg-gray-50 border border-gray-200 text-gray-700 font-medium py-2 px-3 rounded-xl text-sm transition-all hover:border-indigo-300">💡 Tenho uma ideia</button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-800 font-bold mb-2 text-sm">O que você gostaria que melhorasse?</label>
+                        <textarea id="feedback-textarea" rows="3" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all custom-scrollbar resize-none" placeholder="Escreva sua opinião ou sugestão aqui..."></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block text-gray-800 font-bold mb-2 text-sm">Nome <span class="text-gray-400 font-normal">(opcional)</span></label>
+                        <input type="text" id="feedback-name" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all" placeholder="Seu nome">
+                    </div>
+
+                    <button onclick="submitFeedback()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl transition-all shadow-md mt-2">
+                        Enviar feedback
+                    </button>
+                </div>
+
+                <div id="feedback-success-content" class="hidden p-10 text-center flex flex-col items-center justify-center">
+                    <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mb-4 shadow-sm">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-extrabold text-gray-800 mb-2">Obrigado pelo feedback!</h3>
+                    <p class="text-gray-500 text-sm mb-6">Sua opinião ajuda a melhorar o simulador.</p>
+                    <button onclick="closeFeedbackModal()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-2.5 px-6 rounded-xl transition-all">
+                        Fechar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // ==========================================
+        // CONFIGURAÇÃO DO FEEDBACK
+        // ==========================================
+        const FEEDBACK_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLScEGj5U43rdiBbUIB9tTNUa1k64ySjOO8GnwYi0CskZJR1pNQ/viewform?usp=publish-editor";
+
+        // ==========================================
+        // BANCO DE DADOS DOS GUIAS DE ESTUDO (COMPLETO E DIDÁTICO)
+        // ==========================================
+        const studyGuideData = [
+            {
+                unit: 1,
+                title: "Unidade 1: Competências e Aprendizagem",
+                icon: `<svg class="w-8 h-8 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>`,
+                content: `
+                    <h2 class="text-3xl font-extrabold text-indigo-700 mb-6 border-b-2 border-indigo-100 pb-3">Unidade 1: Competências e Aprendizagem</h2>
+                    
+                    <div class="bg-indigo-50 border border-indigo-100 p-5 rounded-xl mb-8">
+                        <h3 class="font-bold text-indigo-800 mb-2 text-lg">Visão Geral da Unidade</h3>
+                        <p class="text-indigo-900 text-sm md:text-base leading-relaxed">Nesta unidade, exploramos como o cérebro humano aprende e se adapta. Entenderemos a diferença entre apenas absorver informações e realmente construir conhecimento, as teorias clássicas da aprendizagem (como as de Piaget e Vygotsky) e o modelo moderno de competências exigido pelo mercado.</p>
+                    </div>
+
+                    <h3 class="text-2xl font-bold text-gray-800 mt-8 mb-4">1. O que você precisa saber</h3>
+                    
+                    <div class="space-y-6">
+                        <!-- Conceito 1 -->
+                        <div class="p-5 bg-white border border-gray-200 rounded-xl shadow-sm">
+                            <h4 class="font-black text-indigo-600 text-lg mb-3">O Modelo C.H.A. (Competência)</h4>
+                            <p class="mb-2"><strong class="text-gray-800">Em palavras simples:</strong> É o pacote completo que o mercado exige hoje: saber a teoria, saber fazer na prática e ter atitude para resolver os problemas.</p>
+                            <p class="mb-4"><strong class="text-gray-800">Em linguagem acadêmica:</strong> A competência é um conjunto que altera o conceito de "qualificação", sendo sintetizada na sigla CHA: Conhecimentos (domínio intelectual), Habilidades (capacidade técnica/experiência) e Atitudes (comportamento/tomada de decisão).</p>
+                            <div class="bg-indigo-50 text-indigo-800 p-3 rounded-lg text-sm font-bold border border-indigo-100">📌 O que lembrar para a prova: Conhecimento = Saber; Habilidade = Saber fazer; Atitude = Querer agir.</div>
+                        </div>
+
+                        <!-- Conceito 2 -->
+                        <div class="p-5 bg-white border border-gray-200 rounded-xl shadow-sm">
+                            <h4 class="font-black text-indigo-600 text-lg mb-3">Neuroplasticidade</h4>
+                            <p class="mb-2"><strong class="text-gray-800">Em palavras simples:</strong> O cérebro é como um músculo; ele muda, cresce e cria novas "pontes" sempre que você aprende algo novo, não importa a sua idade.</p>
+                            <p class="mb-4"><strong class="text-gray-800">Em linguagem acadêmica:</strong> É a capacidade de o cérebro adulto continuar se modificando, estabelecendo novas conexões neurais de acordo com as necessidades ou estímulos do ambiente.</p>
+                            <div class="bg-indigo-50 text-indigo-800 p-3 rounded-lg text-sm font-bold border border-indigo-100">📌 O que lembrar para a prova: Nascemos com neurônios que criam novas rotas a vida toda; o aprendizado fortalece as sinapses.</div>
+                        </div>
+
+                        <!-- Conceito 3 -->
+                        <div class="p-5 bg-white border border-gray-200 rounded-xl shadow-sm">
+                            <h4 class="font-black text-indigo-600 text-lg mb-3">Lifelong Learning (Aprendizagem Contínua)</h4>
+                            <p class="mb-2"><strong class="text-gray-800">Em palavras simples:</strong> A ideia de que você nunca para de estudar. O mundo muda rápido, então você precisa aprender, desaprender e reaprender.</p>
+                            <p class="mb-4"><strong class="text-gray-800">Em linguagem acadêmica:</strong> Postura de busca por educação continuada que atualize conhecimentos, habilidades e atitudes para enfrentar a volatilidade da sociedade.</p>
+                            <div class="bg-indigo-50 text-indigo-800 p-3 rounded-lg text-sm font-bold border border-indigo-100">📌 O que lembrar para a prova: Exige mente aberta, raciocínio analítico e autoconhecimento.</div>
+                        </div>
+                    </div>
+
+                    <h3 class="text-2xl font-bold text-gray-800 mt-10 mb-4">2. Conceitos que podem ser confundidos</h3>
+                    
+                    <div class="grid md:grid-cols-2 gap-4 mb-6">
+                        <div class="p-5 bg-white border border-gray-200 rounded-xl shadow-sm">
+                            <h4 class="font-bold text-gray-800 mb-2">Informação</h4>
+                            <p class="text-sm text-gray-600">É apenas o dado bruto, a notícia que você lê na internet. É pública e recebida passivamente.</p>
+                        </div>
+                        <div class="p-5 bg-white border border-gray-200 rounded-xl shadow-sm">
+                            <h4 class="font-bold text-indigo-600 mb-2">Conhecimento</h4>
+                            <p class="text-sm text-gray-600">É o que você faz com a informação. Exige que você pense, interprete e aplique na prática.</p>
+                        </div>
+                        <div class="md:col-span-2 bg-gray-50 p-4 rounded-lg text-sm text-gray-700 border border-gray-200 font-medium text-center">
+                            <span class="font-black text-gray-900 uppercase">Diferença principal:</span> A informação é o dado isolado; o conhecimento é a ação mental sobre a informação.
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-4 mb-6">
+                        <div class="p-5 bg-white border border-gray-200 rounded-xl shadow-sm">
+                            <h4 class="font-bold text-gray-800 mb-2">Hard Skills</h4>
+                            <p class="text-sm text-gray-600">Habilidades técnicas e mensuráveis. Ex: saber programar, operar máquina ou falar inglês.</p>
+                        </div>
+                        <div class="p-5 bg-white border border-gray-200 rounded-xl shadow-sm">
+                            <h4 class="font-bold text-indigo-600 mb-2">Soft Skills</h4>
+                            <p class="text-sm text-gray-600">Habilidades comportamentais e emocionais (subjetivas). Ex: empatia, proatividade, liderança.</p>
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-4 mb-6">
+                        <div class="p-5 bg-white border border-gray-200 rounded-xl shadow-sm">
+                            <h4 class="font-bold text-gray-800 mb-2">Mentalidade Fixa</h4>
+                            <p class="text-sm text-gray-600">A pessoa acredita que a inteligência é imutável (nasceu assim) e foge de desafios por medo de errar.</p>
+                        </div>
+                        <div class="p-5 bg-white border border-gray-200 rounded-xl shadow-sm">
+                            <h4 class="font-bold text-indigo-600 mb-2">Mentalidade de Crescimento</h4>
+                            <p class="text-sm text-gray-600">A pessoa acredita que a inteligência se desenvolve com o esforço e vê o erro como oportunidade de aprender.</p>
+                        </div>
+                        <div class="md:col-span-2 bg-gray-50 p-4 rounded-lg text-sm text-gray-700 border border-gray-200 font-medium text-center">
+                            <span class="font-black text-gray-900 uppercase">Diferença principal (Sinal Pe):</span> O cérebro foca e cresce quando damos atenção consciente ao erro (Sinal Pe), algo típico da mente de crescimento.
+                        </div>
+                    </div>
+
+                    <h3 class="text-2xl font-bold text-gray-800 mt-10 mb-4">3. Autores e Teorias (Resumo Rápido)</h3>
+                    <div class="overflow-x-auto mb-6">
+                        <table class="w-full text-sm text-left text-gray-600 border border-gray-200 rounded-lg overflow-hidden">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+                                <tr>
+                                    <th class="px-6 py-3 border-b">Autor</th>
+                                    <th class="px-6 py-3 border-b">Teoria</th>
+                                    <th class="px-6 py-3 border-b">Ideia Principal para a Prova</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="bg-white border-b hover:bg-gray-50">
+                                    <td class="px-6 py-4 font-bold text-gray-900">Skinner / Watson</td>
+                                    <td class="px-6 py-4">Behaviorismo</td>
+                                    <td class="px-6 py-4">Aprendizagem é mudança de comportamento via estímulos (reforço positivo e negativo).</td>
+                                </tr>
+                                <tr class="bg-white border-b hover:bg-gray-50">
+                                    <td class="px-6 py-4 font-bold text-gray-900">Jean Piaget</td>
+                                    <td class="px-6 py-4">Construtivismo</td>
+                                    <td class="px-6 py-4">Aprende-se pelo conflito cognitivo (desequilíbrio) usando a assimilação e acomodação.</td>
+                                </tr>
+                                <tr class="bg-white border-b hover:bg-gray-50">
+                                    <td class="px-6 py-4 font-bold text-gray-900">Lev Vygotsky</td>
+                                    <td class="px-6 py-4">Sócio-interacionismo</td>
+                                    <td class="px-6 py-4">Ninguém aprende sozinho. Depende da mediação na Zona de Desenvolvimento Proximal.</td>
+                                </tr>
+                                <tr class="bg-white hover:bg-gray-50">
+                                    <td class="px-6 py-4 font-bold text-gray-900">Henry Wallon</td>
+                                    <td class="px-6 py-4">Desenvolvimento Integral</td>
+                                    <td class="px-6 py-4">A aprendizagem integra aspectos afetivos (emoção), cognitivos e motores.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3 class="text-2xl font-bold text-gray-800 mt-10 mb-4">4. Os Quatro Pilares da Educação (UNESCO)</h3>
+                    <ul class="space-y-3 mb-8">
+                        <li class="p-4 bg-white border border-gray-200 rounded-xl flex gap-3 shadow-sm">
+                            <span class="font-black text-indigo-500 text-xl">1</span>
+                            <div><strong class="text-gray-800 block">Aprender a conhecer:</strong> Desenvolver ferramentas para compreender o mundo; "aprender a aprender" e ter senso crítico.</div>
+                        </li>
+                        <li class="p-4 bg-white border border-gray-200 rounded-xl flex gap-3 shadow-sm">
+                            <span class="font-black text-indigo-500 text-xl">2</span>
+                            <div><strong class="text-gray-800 block">Aprender a fazer:</strong> Colocar a teoria na prática, aplicando competências no mundo do trabalho.</div>
+                        </li>
+                        <li class="p-4 bg-white border border-gray-200 rounded-xl flex gap-3 shadow-sm">
+                            <span class="font-black text-indigo-500 text-xl">3</span>
+                            <div><strong class="text-gray-800 block">Aprender a conviver:</strong> Viver em harmonia, respeitando a diversidade e as diferenças socioculturais.</div>
+                        </li>
+                        <li class="p-4 bg-white border border-gray-200 rounded-xl flex gap-3 shadow-sm">
+                            <span class="font-black text-indigo-500 text-xl">4</span>
+                            <div><strong class="text-gray-800 block">Aprender a ser:</strong> Ter autonomia, juízo de valor próprio, responsabilidade ética e autoconhecimento.</div>
+                        </li>
+                    </ul>
+
+                    <h3 class="text-2xl font-bold text-gray-800 mt-10 mb-4">5. O que é mais importante estudar</h3>
+                    <div class="space-y-3 mb-8">
+                        <div class="border-l-4 border-red-500 bg-red-50 p-4 rounded-r-lg">
+                            <h4 class="font-black text-red-800 text-sm uppercase tracking-wide flex items-center gap-2">🔴 Essencial</h4>
+                            <p class="text-red-900 mt-1 text-sm">Diferenças entre as Teorias da Aprendizagem, conceito de C.H.A., e Tipos de Conhecimento (Saber o que é Senso Comum, Mito e Ciência).</p>
+                        </div>
+                        <div class="border-l-4 border-amber-500 bg-amber-50 p-4 rounded-r-lg">
+                            <h4 class="font-black text-amber-800 text-sm uppercase tracking-wide flex items-center gap-2">🟡 Importante</h4>
+                            <p class="text-amber-900 mt-1 text-sm">Diferença entre Mentalidade Fixa e de Crescimento, e os Quatro Pilares da UNESCO.</p>
+                        </div>
+                    </div>
+
+                    <h3 class="text-2xl font-bold text-gray-800 mt-10 mb-4">6. Teste seu entendimento</h3>
+                    <p class="text-gray-500 mb-4 text-sm font-medium">Tente responder mentalmente. Clique na pergunta para conferir a resposta correta.</p>
+                    
+                    <div class="space-y-2">
+                        <details class="bg-white border border-gray-200 rounded-lg group shadow-sm overflow-hidden">
+                            <summary class="font-bold text-gray-800 p-4 cursor-pointer outline-none hover:bg-gray-50 flex justify-between items-center transition-colors">
+                                O que representam as letras da sigla C.H.A.?
+                                <svg class="w-5 h-5 text-indigo-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </summary>
+                            <div class="p-4 border-t border-gray-100 text-gray-600 bg-indigo-50/30 text-sm">
+                                Conhecimento (domínio teórico), Habilidade (aplicação prática/experiência) e Atitude (comportamento e iniciativa).
+                            </div>
+                        </details>
+                        
+                        <details class="bg-white border border-gray-200 rounded-lg group shadow-sm overflow-hidden">
+                            <summary class="font-bold text-gray-800 p-4 cursor-pointer outline-none hover:bg-gray-50 flex justify-between items-center transition-colors">
+                                Qual a diferença entre a visão de Vygotsky e a de Piaget sobre aprendizagem?
+                                <svg class="w-5 h-5 text-indigo-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </summary>
+                            <div class="p-4 border-t border-gray-100 text-gray-600 bg-indigo-50/30 text-sm">
+                                Para Piaget, o aprendizado é um processo de adaptação biológica individual (desequilíbrio e acomodação). Para Vygotsky, o aprendizado é fundamentalmente social; ele depende da interação com o "outro" (mediação) na Zona de Desenvolvimento Proximal.
+                            </div>
+                        </details>
+
+                        <details class="bg-white border border-gray-200 rounded-lg group shadow-sm overflow-hidden">
+                            <summary class="font-bold text-gray-800 p-4 cursor-pointer outline-none hover:bg-gray-50 flex justify-between items-center transition-colors">
+                                Como o cérebro reage ao erro na "Mentalidade de Crescimento"?
+                                <svg class="w-5 h-5 text-indigo-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </summary>
+                            <div class="p-4 border-t border-gray-100 text-gray-600 bg-indigo-50/30 text-sm">
+                                O erro gera um sinal elétrico no cérebro chamado "Pe" (atenção consciente ao erro). Na mentalidade de crescimento, a pessoa foca no erro para aprender, criando novas sinapses e desenvolvendo o cérebro.
+                            </div>
+                        </details>
+                    </div>
+                `
+            },
+            {
+                unit: 2,
+                title: "Unidade 2: SNCTI e Inovação",
+                icon: `<svg class="w-8 h-8 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>`,
+                content: `
+                    <h2 class="text-3xl font-extrabold text-emerald-700 mb-6 border-b-2 border-emerald-100 pb-3">Unidade 2: SNCTI e Inovação</h2>
+                    
+                    <div class="bg-emerald-50 border border-emerald-100 p-5 rounded-xl mb-8">
+                        <h3 class="font-bold text-emerald-800 mb-2 text-lg">Visão Geral da Unidade</h3>
+                        <p class="text-emerald-900 text-sm md:text-base leading-relaxed">Nesta unidade, saímos do "como o cérebro aprende" e vamos para o "como as ideias viram produtos". Entenderemos o ecossistema brasileiro de ciência (SNCTI), como conseguir dinheiro para pesquisar, como proteger sua invenção (patentes) e os caminhos (incubadoras) para criar uma empresa inovadora (Startup).</p>
+                    </div>
+
+                    <h3 class="text-2xl font-bold text-gray-800 mt-8 mb-4">1. O que você precisa saber</h3>
+                    
+                    <div class="space-y-6">
+                        <!-- Conceito 1 -->
+                        <div class="p-5 bg-white border border-gray-200 rounded-xl shadow-sm">
+                            <h4 class="font-black text-emerald-600 text-lg mb-3">O SNCTI</h4>
+                            <p class="mb-2"><strong class="text-gray-800">Em palavras simples:</strong> É a "máquina" brasileira que organiza regras, dinheiro e instituições para que a pesquisa saia do laboratório e vire tecnologia útil para a sociedade.</p>
+                            <p class="mb-4"><strong class="text-gray-800">Em linguagem acadêmica:</strong> Sistema Nacional de Ciência, Tecnologia e Inovação. É um ecossistema que engloba agentes políticos, agências de fomento e operadores de CT&I para gerar riqueza e emprego.</p>
+                            <div class="bg-emerald-50 text-emerald-800 p-3 rounded-lg text-sm font-bold border border-emerald-100">📌 O que lembrar para a prova: Universidades, empresas e governo trabalham juntos neste sistema. O Plano Nacional define onde investir.</div>
+                        </div>
+
+                        <!-- Conceito 2 -->
+                        <div class="p-5 bg-white border border-gray-200 rounded-xl shadow-sm">
+                            <h4 class="font-black text-emerald-600 text-lg mb-3">Royalties</h4>
+                            <p class="mb-2"><strong class="text-gray-800">Em palavras simples:</strong> É o aluguel que você paga para usar a invenção patenteada de outra pessoa ou empresa.</p>
+                            <p class="mb-4"><strong class="text-gray-800">Em linguagem acadêmica:</strong> Compensação financeira paga ao proprietário pelo direito de explorar e comercializar um produto, marca ou tecnologia protegida legalmente.</p>
+                            <div class="bg-emerald-50 text-emerald-800 p-3 rounded-lg text-sm font-bold border border-emerald-100">📌 O que lembrar para a prova: Só existe cobrança se a invenção for INÉDITA e estiver registrada no INPI.</div>
+                        </div>
+                    </div>
+
+                    <h3 class="text-2xl font-bold text-gray-800 mt-10 mb-4">2. Conceitos que podem ser confundidos</h3>
+                    
+                    <div class="grid md:grid-cols-2 gap-4 mb-6">
+                        <div class="p-5 bg-white border border-gray-200 rounded-xl shadow-sm">
+                            <h4 class="font-bold text-gray-800 mb-2">Incubadora de Empresas</h4>
+                            <p class="text-sm text-gray-600">Apoia negócios que ainda são apenas ideias ou protótipos. Oferece espaço físico e suporte técnico básico (ligada a governos/universidades).</p>
+                        </div>
+                        <div class="p-5 bg-white border border-gray-200 rounded-xl shadow-sm">
+                            <h4 class="font-bold text-emerald-600 mb-2">Aceleradora</h4>
+                            <p class="text-sm text-gray-600">Apoia startups com produto já validado. Injeta dinheiro pesado e contatos (networking) em troca de participação societária (Equity).</p>
+                        </div>
+                        <div class="md:col-span-2 bg-gray-50 p-4 rounded-lg text-sm text-gray-700 border border-gray-200 font-medium text-center">
+                            <span class="font-black text-gray-900 uppercase">Diferença principal:</span> Incubadora nutre o nascimento; Aceleradora financia a expansão rápida.
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-4 mb-6">
+                        <div class="p-5 bg-white border border-gray-200 rounded-xl shadow-sm">
+                            <h4 class="font-bold text-gray-800 mb-2">Propriedade Industrial</h4>
+                            <p class="text-sm text-gray-600">Protege invenções voltadas para o comércio e a indústria. Exemplo: Patentes de máquinas, marcas, desenho industrial.</p>
+                        </div>
+                        <div class="p-5 bg-white border border-gray-200 rounded-xl shadow-sm">
+                            <h4 class="font-bold text-emerald-600 mb-2">Direito Autoral</h4>
+                            <p class="text-sm text-gray-600">Protege a obra intelectual e artística. Exemplo: Músicas, livros, textos e <strong>Programas de Computador (Software)</strong>.</p>
+                        </div>
+                    </div>
+
+                    <h3 class="text-2xl font-bold text-gray-800 mt-10 mb-4">3. Os Atores do Sistema (SNCTI)</h3>
+                    <div class="overflow-x-auto mb-6">
+                        <table class="w-full text-sm text-left text-gray-600 border border-gray-200 rounded-lg overflow-hidden">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+                                <tr>
+                                    <th class="px-6 py-3 border-b">Nível</th>
+                                    <th class="px-6 py-3 border-b">O que fazem?</th>
+                                    <th class="px-6 py-3 border-b">Exemplos</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="bg-white border-b hover:bg-gray-50">
+                                    <td class="px-6 py-4 font-bold text-gray-900">Políticos</td>
+                                    <td class="px-6 py-4">Fazem as regras, criam os Planos Nacionais e definem a estratégia.</td>
+                                    <td class="px-6 py-4">Ministério (MCTIC), Congresso, Sindicatos.</td>
+                                </tr>
+                                <tr class="bg-white border-b hover:bg-gray-50">
+                                    <td class="px-6 py-4 font-bold text-gray-900">Agências de Fomento</td>
+                                    <td class="px-6 py-4">São os "bancos" da ciência. Gerenciam e liberam o dinheiro.</td>
+                                    <td class="px-6 py-4">CNPq, CAPES, FINEP, BNDES.</td>
+                                </tr>
+                                <tr class="bg-white hover:bg-gray-50">
+                                    <td class="px-6 py-4 font-bold text-gray-900">Operadores de CT&I</td>
+                                    <td class="px-6 py-4">Colocam a mão na massa. Realizam a pesquisa e criam a inovação.</td>
+                                    <td class="px-6 py-4">Universidades, Startups, Incubadoras, Parques Tecnológicos.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3 class="text-2xl font-bold text-gray-800 mt-10 mb-4">4. O Ciclo da Inovação</h3>
+                    <div class="bg-gray-50 p-6 rounded-xl border border-gray-200 mb-8">
+                        <ol class="list-decimal list-inside space-y-3 text-gray-700 font-medium">
+                            <li><strong class="text-gray-900">Problema:</strong> Identificação de uma necessidade social ou de mercado.</li>
+                            <li><strong class="text-gray-900">Pesquisa:</strong> A Universidade ou centro de pesquisa cria um projeto ou protótipo.</li>
+                            <li><strong class="text-gray-900">Fomento:</strong> Busca-se investimento financeiro (Bolsas, Subvenção, Crédito).</li>
+                            <li><strong class="text-gray-900">Proteção:</strong> Registra-se a propriedade intelectual no INPI.</li>
+                            <li><strong class="text-gray-900">Desenvolvimento:</strong> A ideia entra em uma Incubadora para amadurecer como negócio.</li>
+                            <li><strong class="text-gray-900">Produto Final:</strong> A inovação chega ao mercado.</li>
+                        </ol>
+                    </div>
+
+                    <h3 class="text-2xl font-bold text-gray-800 mt-10 mb-4">5. O que é mais importante estudar</h3>
+                    <div class="space-y-3 mb-8">
+                        <div class="border-l-4 border-red-500 bg-red-50 p-4 rounded-r-lg">
+                            <h4 class="font-black text-red-800 text-sm uppercase tracking-wide flex items-center gap-2">🔴 Essencial</h4>
+                            <p class="text-red-900 mt-1 text-sm">Saber exatamente a função dos 3 Atores do SNCTI e a diferença técnica entre Incubadora e Aceleradora.</p>
+                        </div>
+                        <div class="border-l-4 border-amber-500 bg-amber-50 p-4 rounded-r-lg">
+                            <h4 class="font-black text-amber-800 text-sm uppercase tracking-wide flex items-center gap-2">🟡 Importante</h4>
+                            <p class="text-amber-900 mt-1 text-sm">Entender a divisão do INPI (saber que software é direito autoral e máquina é patente industrial).</p>
+                        </div>
+                    </div>
+
+                    <h3 class="text-2xl font-bold text-gray-800 mt-10 mb-4">6. Teste seu entendimento</h3>
+                    <div class="space-y-2">
+                        <details class="bg-white border border-gray-200 rounded-lg group shadow-sm overflow-hidden">
+                            <summary class="font-bold text-gray-800 p-4 cursor-pointer outline-none hover:bg-gray-50 flex justify-between items-center transition-colors">
+                                O que a CAPES, o CNPq e a FINEP fazem no sistema de ciência?
+                                <svg class="w-5 h-5 text-emerald-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </summary>
+                            <div class="p-4 border-t border-gray-100 text-gray-600 bg-emerald-50/30 text-sm">
+                                Eles pertencem ao grupo de "Agências de Fomento". A função deles é gerenciar e repassar os recursos financeiros (dinheiro) para as pesquisas nas universidades e empresas.
+                            </div>
+                        </details>
+                        
+                        <details class="bg-white border border-gray-200 rounded-lg group shadow-sm overflow-hidden">
+                            <summary class="font-bold text-gray-800 p-4 cursor-pointer outline-none hover:bg-gray-50 flex justify-between items-center transition-colors">
+                                Tenho um protótipo na garagem e preciso de um espaço básico e apoio técnico. Onde devo ir?
+                                <svg class="w-5 h-5 text-emerald-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </summary>
+                            <div class="p-4 border-t border-gray-100 text-gray-600 bg-emerald-50/30 text-sm">
+                                Em uma Incubadora de Empresas. As aceleradoras são focadas em startups que já possuem produto validado no mercado e buscam crescimento agressivo.
+                            </div>
+                        </details>
+
+                        <details class="bg-white border border-gray-200 rounded-lg group shadow-sm overflow-hidden">
+                            <summary class="font-bold text-gray-800 p-4 cursor-pointer outline-none hover:bg-gray-50 flex justify-between items-center transition-colors">
+                                Criei um novo aplicativo de celular. Como protejo legalmente essa invenção?
+                                <svg class="w-5 h-5 text-emerald-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </summary>
+                            <div class="p-4 border-t border-gray-100 text-gray-600 bg-emerald-50/30 text-sm">
+                                Registrando-o no INPI. Por ser um programa de computador (software), ele será protegido pelas regras do "Direito Autoral", e não por uma Patente de Invenção Industrial.
+                            </div>
+                        </details>
+                    </div>
+                `
+            },
+            {
+                unit: 3,
+                title: "Unidade 3: Metodologia e ABNT",
+                icon: `<svg class="w-8 h-8 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>`,
+                content: `
+                    <h2 class="text-3xl font-extrabold text-amber-700 mb-6 border-b-2 border-amber-100 pb-3">Unidade 3: Metodologia e ABNT</h2>
+                    
+                    <div class="bg-amber-50 border border-amber-100 p-5 rounded-xl mb-8">
+                        <h3 class="font-bold text-amber-800 mb-2 text-lg">Visão Geral da Unidade</h3>
+                        <p class="text-amber-900 text-sm md:text-base leading-relaxed">Chegamos à estruturação acadêmica. Como a ciência é feita na prática? Estudaremos as etapas do Método Científico, os tipos de raciocínio (Indutivo, Dedutivo, Dialético) e, muito importante, as regras práticas de redação (Citações e Referências da ABNT) necessárias para os trabalhos universitários.</p>
+                    </div>
+
+                    <h3 class="text-2xl font-bold text-gray-800 mt-8 mb-4">1. O que você precisa saber</h3>
+                    
+                    <div class="space-y-6">
+                        <!-- Conceito 1 -->
+                        <div class="p-5 bg-white border border-gray-200 rounded-xl shadow-sm">
+                            <h4 class="font-black text-amber-600 text-lg mb-3">O Método Científico</h4>
+                            <p class="mb-2"><strong class="text-gray-800">Em palavras simples:</strong> É o "manual de instruções" rigoroso que os cientistas seguem para não tirarem conclusões baseadas em achismos.</p>
+                            <p class="mb-4"><strong class="text-gray-800">Em linguagem acadêmica:</strong> Conjunto de atividades sistemáticas e racionais que permite alcançar, com segurança, o objetivo de produzir conhecimento válido e evitar erros de dedução.</p>
+                            <div class="bg-amber-50 text-amber-800 p-3 rounded-lg text-sm font-bold border border-amber-100">📌 O que lembrar para a prova: Seus resultados são "conjecturais" (provisórios), ou seja, a ciência não é um dogma imutável; pode ser refutada no futuro.</div>
+                        </div>
+
+                        <!-- Conceito 2 -->
+                        <div class="p-5 bg-white border border-gray-200 rounded-xl shadow-sm">
+                            <h4 class="font-black text-amber-600 text-lg mb-3">Termo de Consentimento</h4>
+                            <p class="mb-2"><strong class="text-gray-800">Em palavras simples:</strong> Um contrato ético assinado por quem vai ser estudado ou entrevistado por você.</p>
+                            <p class="mb-4"><strong class="text-gray-800">Em linguagem acadêmica:</strong> Documento contendo os dados da pesquisa e do participante, garantindo a anuência dele em participar e permitindo o uso ético das informações coletadas.</p>
+                            <div class="bg-amber-50 text-amber-800 p-3 rounded-lg text-sm font-bold border border-amber-100">📌 O que lembrar para a prova: É obrigatório em pesquisas de campo que envolvam seres humanos.</div>
+                        </div>
+                    </div>
+
+                    <h3 class="text-2xl font-bold text-gray-800 mt-10 mb-4">2. Conceitos que podem ser confundidos</h3>
+                    
+                    <div class="grid md:grid-cols-2 gap-4 mb-6">
+                        <div class="p-5 bg-white border border-gray-200 rounded-xl shadow-sm">
+                            <h4 class="font-bold text-gray-800 mb-2">Método Indutivo</h4>
+                            <p class="text-sm text-gray-600">Vai do MICRO para o MACRO. Observa casos específicos (isolados) e cria uma lei geral. (Ex: Toda água testada ferveu a 100ºC -> logo, toda água no mundo ferve a 100ºC).</p>
+                        </div>
+                        <div class="p-5 bg-white border border-gray-200 rounded-xl shadow-sm">
+                            <h4 class="font-bold text-amber-600 mb-2">Método Dedutivo</h4>
+                            <p class="text-sm text-gray-600">Vai do MACRO para o MICRO. Usa uma lei geral conhecida para deduzir um caso particular. (Ex: Mamíferos têm pelo -> Cachorro é mamífero -> Cachorro tem pelo).</p>
+                        </div>
+                        <div class="md:col-span-2 bg-gray-50 p-4 rounded-lg text-sm text-gray-700 border border-gray-200 font-medium text-center">
+                            <span class="font-black text-gray-900 uppercase">Diferença principal:</span> A indução cria a regra (mas pode errar se testar poucos casos: falácia da amostra insuficiente). A dedução aplica uma regra já testada.
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-4 mb-6">
+                        <div class="p-5 bg-white border border-gray-200 rounded-xl shadow-sm">
+                            <h4 class="font-bold text-gray-800 mb-2">Pesquisa Qualitativa</h4>
+                            <p class="text-sm text-gray-600">Foca nos motivos, atitudes e significados (subjetividade). Usa entrevistas e discursos. Não trabalha primariamente com números.</p>
+                        </div>
+                        <div class="p-5 bg-white border border-gray-200 rounded-xl shadow-sm">
+                            <h4 class="font-bold text-amber-600 mb-2">Pesquisa Quantitativa</h4>
+                            <p class="text-sm text-gray-600">Foca nas estatísticas, amostras e generalizações. Usa questionários fechados e gráficos matemáticos exatos.</p>
+                        </div>
+                    </div>
+
+                    <h3 class="text-2xl font-bold text-gray-800 mt-10 mb-4">3. Citações ABNT (MUITO IMPORTANTE)</h3>
+                    <ul class="space-y-4 mb-8">
+                        <li class="p-4 bg-white border-l-4 border-amber-400 rounded-r-xl shadow-sm">
+                            <strong class="text-gray-800 block text-lg mb-1">Citação Direta Curta (Até 3 linhas)</strong>
+                            <p class="text-gray-600 text-sm">Cópia idêntica. Fica dentro do próprio parágrafo envolvida obrigatoriamente por <strong>"aspas"</strong>. Exige: (AUTOR, Ano, p. X).</p>
+                        </li>
+                        <li class="p-4 bg-white border-l-4 border-amber-600 rounded-r-xl shadow-sm">
+                            <strong class="text-gray-800 block text-lg mb-1">Citação Direta Longa (Mais de 3 linhas)</strong>
+                            <p class="text-gray-600 text-sm">Cópia idêntica. Fica em parágrafo isolado, com recuo de 4cm da margem, fonte menor e <strong>SEM ASPAS</strong>. Exige: (AUTOR, Ano, p. X).</p>
+                        </li>
+                        <li class="p-4 bg-white border-l-4 border-gray-400 rounded-r-xl shadow-sm">
+                            <strong class="text-gray-800 block text-lg mb-1">Citação Indireta (Paráfrase)</strong>
+                            <p class="text-gray-600 text-sm">Escrever a ideia do autor com suas próprias palavras. Fica dentro do texto normal, <strong>sem aspas e sem página</strong>. Exige apenas: (AUTOR, Ano).</p>
+                        </li>
+                    </ul>
+
+                    <h3 class="text-2xl font-bold text-gray-800 mt-10 mb-4">4. Autores Lógicos</h3>
+                    <div class="grid md:grid-cols-2 gap-4 mb-8">
+                        <div class="bg-gray-50 p-5 rounded-xl border border-gray-200">
+                            <h4 class="font-black text-gray-800">Karl Popper / Mario Bunge</h4>
+                            <p class="text-sm font-bold text-amber-600 mb-2">Método Hipotético-Dedutivo</p>
+                            <p class="text-sm text-gray-700">A ciência avança ao tentar "falsear" (derrubar) hipóteses. Se a ideia resiste aos testes, ela é corroborada.</p>
+                        </div>
+                        <div class="bg-gray-50 p-5 rounded-xl border border-gray-200">
+                            <h4 class="font-black text-gray-800">Hegel / Karl Marx</h4>
+                            <p class="text-sm font-bold text-amber-600 mb-2">Método Dialético</p>
+                            <p class="text-sm text-gray-700">O mundo vive em transformação baseada em contradições. A lei da negação (Tese $\\rightarrow$ Antítese $\\rightarrow$ Síntese).</p>
+                        </div>
+                    </div>
+
+                    <h3 class="text-2xl font-bold text-gray-800 mt-10 mb-4">5. O que é mais importante estudar</h3>
+                    <div class="space-y-3 mb-8">
+                        <div class="border-l-4 border-red-500 bg-red-50 p-4 rounded-r-lg">
+                            <h4 class="font-black text-red-800 text-sm uppercase tracking-wide flex items-center gap-2">🔴 Essencial</h4>
+                            <p class="text-red-900 mt-1 text-sm">Dominar perfeitamente as regras de Citação da ABNT e entender as diferenças entre os métodos lógicos (Indutivo x Dedutivo).</p>
+                        </div>
+                        <div class="border-l-4 border-amber-500 bg-amber-50 p-4 rounded-r-lg">
+                            <h4 class="font-black text-amber-800 text-sm uppercase tracking-wide flex items-center gap-2">🟡 Importante</h4>
+                            <p class="text-amber-900 mt-1 text-sm">Entender como formular a estrutura do projeto: O Problema (sempre em pergunta) e os Objetivos (com verbo no infinitivo).</p>
+                        </div>
+                    </div>
+
+                    <h3 class="text-2xl font-bold text-gray-800 mt-10 mb-4">6. Teste seu entendimento</h3>
+                    <div class="space-y-2">
+                        <details class="bg-white border border-gray-200 rounded-lg group shadow-sm overflow-hidden">
+                            <summary class="font-bold text-gray-800 p-4 cursor-pointer outline-none hover:bg-gray-50 flex justify-between items-center transition-colors">
+                                Em um texto acadêmico, o que acontece se a citação direta tiver 4 linhas?
+                                <svg class="w-5 h-5 text-amber-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </summary>
+                            <div class="p-4 border-t border-gray-100 text-gray-600 bg-amber-50/30 text-sm">
+                                Ela passa a ser considerada "Longa". Deve perder as aspas, ganhar recuo de 4cm da margem esquerda, fonte reduzida e apresentar o número da página no final.
+                            </div>
+                        </details>
+                        
+                        <details class="bg-white border border-gray-200 rounded-lg group shadow-sm overflow-hidden">
+                            <summary class="font-bold text-gray-800 p-4 cursor-pointer outline-none hover:bg-gray-50 flex justify-between items-center transition-colors">
+                                Qual a diferença entre a Ficha Bibliográfica e a Ficha de Leitura?
+                                <svg class="w-5 h-5 text-amber-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </summary>
+                            <div class="p-4 border-t border-gray-100 text-gray-600 bg-amber-50/30 text-sm">
+                                A <strong>Ficha de Leitura</strong> guarda resumos soltos e as suas próprias interpretações da obra. A <strong>Ficha Bibliográfica</strong> guarda o dado exato da catalogação da obra (autor, página, título) e as transcrições diretas organizadas para formar as referências do seu artigo.
+                            </div>
+                        </details>
+
+                        <details class="bg-white border border-gray-200 rounded-lg group shadow-sm overflow-hidden">
+                            <summary class="font-bold text-gray-800 p-4 cursor-pointer outline-none hover:bg-gray-50 flex justify-between items-center transition-colors">
+                                Por que a formulação do "Problema de Pesquisa" deve ser feita em formato de pergunta?
+                                <svg class="w-5 h-5 text-amber-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </summary>
+                            <div class="p-4 border-t border-gray-100 text-gray-600 bg-amber-50/30 text-sm">
+                                Porque o objetivo da ciência é resolver algo que ainda não tem solução clara. Formular como pergunta deixa direto e evidente o que o pesquisador quer descobrir ao final do projeto. Se fosse uma afirmação, a pesquisa já nasceria enviesada ou concluída.
+                            </div>
+                        </details>
+                    </div>
+                `
+            }
+        ];
+
+        // ==========================================
+        // BANCO DE DADOS DO QUIZ (AS 51 QUESTÕES MANTIDAS INTACTAS)
+        // ==========================================
+        const quizData = [
+            // 11 originais (índices 0 a 10)
+            {
+                unit: 2,
+                theme: "Produção e Fomento Científico",
+                question: "A importância do conhecimento científico para impulsionar a inovação é manifestada em várias direções. Assinale a alternativa correta que apresenta o papel desempenhado pelas universidades e centros de pesquisa no desenvolvimento científico e tecnológico de um país:",
+                options: [
+                    "A) Elas têm um papel secundário, visto que a maior parte do desenvolvimento acontece no setor privado.",
+                    "B) Elas são responsáveis pela produção e difusão do conhecimento, necessitando de recursos financeiros destinados à pesquisa e inovação.",
+                    "C) Elas são responsáveis apenas por ministrar aulas e educar a próxima geração de trabalhadores.",
+                    "D) Elas são apenas um local de encontro para cientistas e estudantes, sem ter qualquer impacto direto."
+                ],
+                answer: 1,
+                justification: "As universidades são o grande motor da ciência (elas não servem apenas para dar aulas). Mas, para que essa produção científica aconteça, é indispensável o fomento (dinheiro) contínuo através de órgãos como CAPES, CNPq e FINEP."
+            },
+            {
+                unit: 1,
+                theme: "Competências e Modelo C.H.A.",
+                question: "O conceito de competência vem sendo amplamente associado à sigla CHA. Considerando a aplicabilidade do CHA, analise as afirmativas:\n\nI. A integração entre conhecimentos, habilidades técnicas e atitudes éticas é essencial para a adaptação do profissional.\nII. A atitude de aprendizado contínuo permite atualizar conhecimentos.\nIII. A conexão entre conhecimentos teóricos e prática deve ser fortalecida por atitudes de flexibilidade.\nIV. A aplicação prática de habilidades complementa a base teórica.",
+                options: [
+                    "A) II e IV, apenas.",
+                    "B) I, apenas.",
+                    "C) III e IV, apenas.",
+                    "D) I, II, III e IV."
+                ],
+                answer: 3,
+                justification: "Todas estão corretas! O mercado exige o profissional completo: aquele que sabe a teoria (Conhecimento), que sabe colocar em prática (Habilidade) e que tem ética, flexibilidade e busca aprendizado contínuo (Atitude)."
+            },
+            {
+                unit: 1,
+                theme: "Neuroplasticidade e Performance Cognitiva",
+                question: "Com relação à justificativa da necessidade do desenvolvimento da alta performance cognitiva, analise:\n\nI. O aprender auxilia na capacidade de produzir novos conhecimentos.\nII. O aprender a aprender envolve usar estratégias para tornar a aprendizagem eficiente.\nIII. O aprender a aprender é essencial para o sucesso e pode ser desenvolvido.\nIV. A pessoa que aprende continuamente constrói tantas conexões neurais que a capacidade de compreensão é bem maior.",
+                options: [
+                    "A) III e IV, apenas.",
+                    "B) I, II, III e IV.",
+                    "C) II e IV, apenas.",
+                    "D) I, II e III, apenas."
+                ],
+                answer: 1,
+                justification: "Todas corretas! A afirmativa IV é o coração da Neuroplasticidade: o cérebro se modifica fisicamente e cria novas sinapses quando aprendemos continuamente, tornando a compreensão cada vez mais ágil."
+            },
+            {
+                unit: 2,
+                theme: "Instrumentos de Fomento à Inovação",
+                question: "Carlos identificou uma oportunidade ao desenvolver um sistema inovador de IA. Ele pesquisa instrumentos como subvenção econômica. Avalie as asserções:\n\nI. A subvenção econômica oferece às empresas a possibilidade de obter recursos financeiros NÃO reembolsáveis para projetos de inovação.\nPORQUE\nII. Esse tipo de instrumento promove, além do fomento direto, a visibilidade dos produtos muitas vezes ampliando suas oportunidades.",
+                options: [
+                    "A) As asserções I e II são verdadeiras, mas a II não é uma justificativa correta da I.",
+                    "B) A asserção I é verdadeira, e a II é falsa.",
+                    "C) As asserções I e II são verdadeiras, e a II é uma justificativa correta da I.",
+                    "D) As asserções I e II são falsas."
+                ],
+                answer: 0,
+                justification: "Ambas as frases são verdades absolutas, MAS a segunda não justifica a primeira. O governo não dá dinheiro a fundo perdido (subvenção) *só* para gerar visibilidade, e sim para dividir o alto risco financeiro de criar inovações radicais."
+            },
+            {
+                unit: 2,
+                theme: "Ecossistemas de Inovação",
+                question: "João tem um PROTÓTIPO para melhorar painéis solares. Ele verificou suporte de incubadoras e aceleradoras. Avalie:\n\nI. João deve optar inicialmente por uma incubadora de empresas, pois está em uma etapa onde o produto ainda é um protótipo que necessita de suporte técnico.\nPORQUE\nII. O foco principal das aceleradoras é acelerar startups com propostas já validadas, conectando-as a investidores.",
+                options: [
+                    "A) As asserções I e II são falsas.",
+                    "B) As asserções I e II são verdadeiras, e a II é uma justificativa correta da I.",
+                    "C) A asserção I é falsa, e a II é verdadeira.",
+                    "D) As asserções I e II são verdadeiras, mas a II não é justificativa correta da I."
+                ],
+                answer: 1,
+                justification: "Exatamente! Incubadora = fase de ideia/protótipo (suporte básico). Aceleradora = fase de vendas/escala (produto já validado no mercado). Por isso a afirmação II justifica perfeitamente o porquê dele ter que escolher a incubadora na afirmação I."
+            },
+            {
+                unit: 2,
+                theme: "Impactos da Inovação no Mundo do Trabalho",
+                question: "Significativas mudanças na gestão do trabalho ao longo das cadeias produtivas foram observadas. Sobre a dinâmica do mercado de trabalho e o impacto da inovação, assinale a correta:",
+                options: [
+                    "A) Segundo o Ministério da Economia, micro e pequenas empresas não têm relevância na geração de empregos.",
+                    "B) A inovação constante traz alterações qualitativas e quantitativas do emprego, podendo tanto contribuir para a destruição de empresas e empregos quanto gerar novos empregos.",
+                    "C) Harvey afirma que todos os trabalhadores possuem contratos integrais e segurança.",
+                    "D) O termo exército de reserva refere-se ao grupo constantemente empregado."
+                ],
+                answer: 1,
+                justification: "A inovação é uma faca de dois gumes: a automação destrói postos de trabalho repetitivos e manuais, mas ao mesmo tempo cria novas indústrias, empresas e vagas de emprego altamente qualificadas."
+            },
+            {
+                unit: 1,
+                theme: "Lifelong Learning",
+                question: "Avalie as asserções sobre Lifelong Learning:\n\nI. O conceito pressupõe que a aprendizagem não está apenas vinculada à absorção de conhecimentos, mas sim à capacidade de aplicá-los para resolver problemas de forma adaptativa.\nPORQUE\nII. Em um contexto de lifelong learning, o raciocínio lógico e analítico é indispensável para estruturar o pensamento crítico e filtrar informações complexas.",
+                options: [
+                    "A) As asserções I e II são verdadeiras, e a II é uma justificativa correta da I.",
+                    "B) As asserções I e II são verdadeiras, mas a II NÃO é uma justificativa correta da I.",
+                    "C) A asserção I é falsa, e a II é verdadeira.",
+                    "D) As asserções I e II são falsas."
+                ],
+                answer: 0,
+                justification: "O Lifelong Learning exige aplicação prática na vida real (Asserção I). Para conseguir aplicar isso em um mundo caótico e cheio de dados, você OBRIGATORIAMENTE precisa da base analítica e crítica (Asserção II)."
+            },
+            {
+                unit: 3,
+                theme: "ABNT - Citações Indiretas",
+                question: "Analise o ERRO nesta citação INDIRETA:\n\nA gestão de pessoas é uma das principais estratégias para o crescimento de uma empresa... (Silva, 2020, p. 40).",
+                options: [
+                    "A) Faltam as aspas envolvendo o texto.",
+                    "B) A página (p. 40) deve ser removida e o sobrenome do autor dentro dos parênteses deve estar em letras maiúsculas: (SILVA, 2020).",
+                    "C) O recuo de 4cm da margem esquerda está faltando.",
+                    "D) O ano de publicação deve vir antes do nome do autor."
+                ],
+                answer: 1,
+                justification: "Na Citação Indireta (Paráfrase), você NÃO usa aspas e NÃO usa número de página. Além disso, segundo a ABNT, quando o autor está dentro dos parênteses, ele fica todo em CAIXA ALTA."
+            },
+            {
+                unit: 3,
+                theme: "ABNT - Citações Diretas Curtas",
+                question: "Analise o ERRO nesta citação DIRETA CURTA:\n\nSegundo SOUZA (2021) a liderança eficaz é aquela que inspira e motiva suas lideranças para alcançar resultados extraordinários.",
+                options: [
+                    "A) Como o autor está fora dos parênteses, apenas a 1ª letra do nome deve ser maiúscula (Souza), além da falta das aspas envolvendo o texto e a indicação da página.",
+                    "B) O texto deveria estar recuado 4cm da margem esquerda.",
+                    "C) Faltou colocar todo o parágrafo em itálico e negrito.",
+                    "D) A indicação do autor deveria estar obrigatoriamente no final da frase."
+                ],
+                answer: 0,
+                justification: "Para a ABNT, citações com até 3 linhas OBRIGAM o uso de \"aspas\" e a página de onde foi tirado (ex: p. 45). Se o autor está inserido na frase (fora dos parênteses), a escrita correta é: Segundo Souza (2021, p. 45)..."
+            },
+            {
+                unit: 3,
+                theme: "ABNT - Citações Diretas Longas",
+                question: "Analise o ERRO nesta citação DIRETA LONGA:\n\nSegundo Silva (2019): \"A inovação nas empresas é um processo contínuo...\" (Texto escrito no mesmo alinhamento e tamanho do resto da página).",
+                options: [
+                    "A) Falta colocar o texto centralizado na folha.",
+                    "B) As aspas devem ser removidas, o texto deve ter um recuo de 4cm da margem esquerda, fonte reduzida e é preciso indicar a página.",
+                    "C) O texto longo deve sempre ser colocado no rodapé da página.",
+                    "D) Nenhuma das alternativas. Citações longas exigem aspas duplas."
+                ],
+                answer: 1,
+                justification: "Regra de ouro da ABNT: Passou de 3 linhas? Tira as aspas, joga o texto com 4cm de recuo para a direita, diminui o tamanho da fonte (geralmente 10) e adiciona o número da página no final."
+            },
+            {
+                unit: 3,
+                theme: "ABNT - Referências Bibliográficas",
+                question: "Analise o ERRO nesta REFERÊNCIA BIBLIOGRÁFICA (no fim do trabalho):\n\nSilva, João. Gestão de Pessoas. São Paulo: Editora X, 2020.",
+                options: [
+                    "A) O nome da editora deve vir em primeiro lugar.",
+                    "B) Falta o subtítulo da obra e a quantidade de páginas totais do livro.",
+                    "C) O sobrenome do autor deve ser MAIÚSCULO (SILVA), o título do livro deve ficar em negrito, e a edição deve ser inserida (ex: 2. ed.).",
+                    "D) O ano de publicação (2020) precisa obrigatoriamente vir logo após o nome do autor."
+                ],
+                answer: 2,
+                justification: "Formato padrão ABNT para Referências de Livros: SOBRENOME (maiúsculo), Nome. **Título em Negrito**. Edição (se houver). Local (Cidade): Editora, Ano."
+            },
+            // 20 da Unidade 1 (índices 11 a 30)
+            {
+                source: "study", unit: 1, theme: "Teorias da Aprendizagem - Behaviorismo",
+                question: "De acordo com a teoria Behaviorista (Skinner e Watson), a aprendizagem ocorre pela reação a condições do ambiente. No que se refere ao papel das experiências desagradáveis na aprendizagem, assinale a alternativa que reflete corretamente o pensamento behaviorista apresentado na apostila:",
+                options: ["A) Elas causam desequilíbrio cognitivo que leva à assimilação de novos esquemas mentais de defesa.", "B) Elas atuam como reforços negativos, pois a pessoa tentará eliminar o comportamento que as causou, favorecendo a remoção desse determinado comportamento.", "C) Elas impedem o desenvolvimento das funções psicológicas superiores, bloqueando a zona de desenvolvimento proximal.", "D) Elas geram um processo de adaptação puramente biológica, sem impacto na mudança do comportamento."],
+                answer: 1, justification: "A resposta está na página 11 do PDF. O material explica que experiências desagradáveis promovem a aprendizagem ao forçarem a pessoa a tentar eliminar o comportamento que as causou. O behaviorismo chama isso de 'reforços negativos', que favorecem a remoção de um determinado comportamento. (As alternativas A e C descrevem Piaget e Vygotsky, respectivamente)."
+            },
+            {
+                source: "study", unit: 1, theme: "Teorias da Aprendizagem - Piaget",
+                question: "Para Jean Piaget, a aprendizagem e o desenvolvimento cognitivo são impulsionados por conflitos. Quando um indivíduo depara-se com uma situação-problema nova, ocorre um desequilíbrio. Para buscar um novo equilíbrio (equilibração) com o meio, o sujeito utiliza dois mecanismos internos e complementares. Quais são eles?",
+                options: ["A) Memorização ativa e raciocínio dedutivo.", "B) Condicionamento positivo e reforço negativo.", "C) Assimilação (incorporar novas experiências a esquemas existentes) e Acomodação (ajustar estruturas a partir de novas informações).", "D) Funções psicológicas rudimentares e funções psicológicas superiores."],
+                answer: 2, justification: "A resposta encontra-se nas páginas 14 e 15 do PDF. Piaget define que o indivíduo busca a equilibração através da 'assimilação' (incorporação de novos dados aos esquemas existentes) e da 'acomodação' (modificação das estruturas mentais para dar conta da nova experiência)."
+            },
+            {
+                source: "study", unit: 1, theme: "Teorias da Aprendizagem - Vygotsky",
+                question: "Lev Vygotsky defende que o ser humano nasce com funções psicológicas rudimentares, mas precisa desenvolver funções superiores (como pensamento abstrato e raciocínio). Segundo o autor, como se dá o aprender e a passagem para essas funções mais complexas?",
+                options: ["A) Por meio de um processo estritamente biológico de maturação, que ocorre independentemente do meio cultural.", "B) Pela passagem da 'zona de desenvolvimento real' para a 'zona de desenvolvimento potencial', processo que ocorre na 'zona de desenvolvimento proximal' com a mediação do outro (ensino).", "C) Através da supressão por repetição, em que o cérebro automatiza o conhecimento sem necessidade de interação.", "D) Pela exposição passiva a reforços positivos, sem que o sujeito precise ter um papel interativo."],
+                answer: 1, justification: "Páginas 17 e 18. Para Vygotsky, o aprender ocorre na 'zona de desenvolvimento proximal' – a distância entre o que o indivíduo faz sozinho (real) e o que pode fazer com ajuda (potencial). Toda aprendizagem precisa da mediação do 'outro social' e da linguagem."
+            },
+            {
+                source: "study", unit: 1, theme: "Teorias da Aprendizagem - Wallon",
+                question: "Para Henry Wallon, o desenvolvimento humano e a aprendizagem dependem fortemente da interação com a cultura e não são processos meramente intelectuais. Assinale a alternativa que descreve corretamente a concepção de aprendizagem para este autor:",
+                options: ["A) É um processo que mobiliza o organismo como um todo, integrando simultaneamente os aspectos afetivos, cognitivos e motores.", "B) É a modificação do comportamento baseada exclusivamente em treinamento e repetição.", "C) Ocorre somente a partir dos 12 anos de idade, quando se atinge o estágio das operações formais.", "D) Acontece de forma fragmentada, em que as emoções (afetividade) não possuem influência na cognição."],
+                answer: 0, justification: "Páginas 16 e 17 do PDF. Wallon defendia que a aprendizagem mobiliza o organismo integralmente, relacionando de forma indissociável os aspectos afetivos (emoções), cognitivos (intelecto) e motores."
+            },
+            {
+                source: "study", unit: 1, theme: "Competências: Modelo C.H.A.",
+                question: "No contexto do mercado de trabalho moderno, o conceito de 'competência' vem substituindo a noção de 'qualificação'. O conceito de competência é sintetizado pela sigla CHA. Sobre os elementos desta sigla, avalie as afirmativas:\n\nI. O Conhecimento é o domínio intelectual e teórico, geralmente adquirido pela educação formal.\nII. As Habilidades são instintivas, não dependendo de prática ou experiência.\nIII. As Atitudes dizem respeito à capacidade de agir, tomar decisões adequadas e dependem de autoconhecimento.\n\nÉ correto o que se afirma em:",
+                options: ["A) I e II, apenas.", "B) I e III, apenas.", "C) II e III, apenas.", "D) I, II e III."],
+                answer: 1, justification: "Páginas 25 e 26. A afirmativa I está correta. A afirmativa III está correta. A afirmativa II está incorreta porque Habilidades não são instintivas; segundo o texto, elas são a capacidade do 'saber fazer' e da aplicação técnica que melhoram exatamente com a 'prática' e a 'experiência'."
+            },
+            {
+                source: "study", unit: 1, theme: "Hard Skills vs. Soft Skills",
+                question: "A atualidade exige que o profissional vá além da sua qualificação acadêmica, desenvolvendo as chamadas 'soft skills'. De acordo com a apostila, qual é a principal diferença entre 'hard skills' e 'soft skills'?",
+                options: ["A) Hard skills são competências inatas; soft skills são habilidades motoras.", "B) Hard skills referem-se exclusivamente à capacidade de trabalhar em equipe; soft skills referem-se ao uso de maquinários industriais.", "C) Hard skills são habilidades técnicas que podem ser mensuradas; soft skills estão no campo da subjetividade (ex: proatividade, pensamento crítico) e não podem ser quantificadas facilmente.", "D) Hard skills e soft skills são termos complementares que definem exatamente o mesmo tipo de qualificação técnica formal."],
+                answer: 2, justification: "Página 29 do PDF (Zoom no Conhecimento). As hard skills são as habilidades técnicas mensuráveis. Em contrapartida, as soft skills estão no campo da subjetividade e se manifestam na postura do sujeito diante de desafios (como proatividade e pensamento crítico)."
+            },
+            {
+                source: "study", unit: 1, theme: "Informação vs. Conhecimento",
+                question: "Frequentemente confundidos, 'Informação' e 'Conhecimento' possuem definições distintas. Com base no material, assinale a diferença fundamental entre os dois:",
+                options: ["A) A Informação é o produto da reflexão crítica, enquanto o Conhecimento é a simples reunião de dados públicos.", "B) A Informação é uma reunião pública de dados; o Conhecimento exige uma ação mental (cognitiva) do sujeito sobre esses dados, relacionando-os com vivências e dando a eles uma utilidade prática.", "C) Na atual sociedade digital, a Informação substituiu o Conhecimento Científico em todas as esferas acadêmicas.", "D) O Conhecimento é instintivo e transmitido geneticamente, enquanto a Informação precisa ser estudada."],
+                answer: 1, justification: "Páginas 35 e 36. O texto define a informação como a mera 'reunião dos dados' tornada pública. Já o conhecimento exige que o pensamento 'consiga apreender um objeto', sendo fruto de uma ação mental do sujeito sobre a informação, dando a ela utilidade."
+            },
+            {
+                source: "study", unit: 1, theme: "Pilares da Educação - UNESCO",
+                question: "O Relatório Delors (UNESCO, 1998) propôs quatro pilares essenciais para a educação no século XXI. Qual destes pilares refere-se diretamente ao desenvolvimento da capacidade autônoma de decidir, criar juízos de valor independentes, desenvolvendo a ética e o autoconhecimento?",
+                options: ["A) Aprender a conhecer.", "B) Aprender a conviver.", "C) Aprender a fazer.", "D) Aprender a ser."],
+                answer: 3, justification: "Páginas 38 e 39 do PDF. 'Aprender a ser' visa à autonomia, juízo de valor próprio, ética e autoconhecimento. A opção A (conhecer) foca nas ferramentas cognitivas; a opção B (conviver) no respeito à diversidade; e a opção C (fazer) na aplicação técnica para o trabalho."
+            },
+            {
+                source: "study", unit: 1, theme: "Sociedade do Conhecimento",
+                question: "Autores como Castells, e Dziekaniak e Rover analisam a atual 'Sociedade do Conhecimento'. Ao refletirem sobre as características dessa sociedade, Dziekaniak e Rover alertam para um risco significativo inerente a esse modelo econômico. Qual é esse risco apontado na apostila?",
+                options: ["A) A supervalorização do ensino infantil em detrimento do ensino superior e técnico.", "B) A padronização de todos os saberes mundiais, eliminando as inovações incrementais das empresas.", "C) A sociedade do conhecimento pode ampliar as desigualdades sociais, pois manter saberes restritos garante vantagens competitivas, excluindo quem não tem acesso.", "D) A exclusão do sujeito ativo no processo de ensino-aprendizagem, substituindo-o inteiramente por inteligências artificiais."],
+                answer: 2, justification: "A resposta está na página 41 do PDF. Os autores alertam explicitamente sobre 'os riscos de a sociedade do conhecimento ampliar as desigualdades sociais, pois, se conhecimento é poder, mantê-lo restrito é uma forma de garantir algum tipo de vantagem atual ou futura', gerando exclusão."
+            },
+            {
+                source: "study", unit: 1, theme: "Neuroplasticidade e Supressão por Repetição",
+                question: "No processo de aprendizagem, o cérebro lida de formas distintas com a repetição e a novidade. Avalie a asserção e a razão a seguir propostas por Eagleman e Brandt:\n\nI. Quando o cérebro se acostuma com algo repetitivo e previsível, ele gasta menos energia neural, reduzindo sua atenção e resposta.\nPORQUE\nII. Lidar com o mundo exige muito do cérebro; ao fazer previsões corretas sobre coisas já conhecidas (supressão por repetição), ele economiza energia.",
+                options: ["A) As asserções I e II são verdadeiras, mas a II não justifica a I.", "B) As asserções I e II são falsas.", "C) As asserções I e II são verdadeiras, e a II é uma justificativa correta da I.", "D) A asserção I é verdadeira, e a II é falsa."],
+                answer: 2, justification: "Páginas 63 e 64 do PDF. Ambas as frases estão corretas e a II explica a I. O cérebro, para poupar energia vital (já que raciocinar é energeticamente custoso), diminui a resposta neural diante de coisas familiares. A previsibilidade gera segurança e economia de energia, mas reduz o foco."
+            },
+            {
+                source: "study", unit: 1, theme: "Mentalidade de Crescimento (Mindset)",
+                question: "Segundo a teoria de Carol Dweck, a mentalidade (mindset) adotada por uma pessoa afeta diretamente seu sucesso. Das características abaixo, qual pertence EXCLUSIVAMENTE a um indivíduo com 'Growth Mindset' (Mentalidade de Crescimento)?",
+                options: ["A) Evitar novos desafios por receio de falhar e demonstrar incompetência.", "B) Interpretar uma falha ou um erro como uma medida direta e imutável de seu valor e de sua competência.", "C) Acreditar que a inteligência, talentos e aptidões são qualidades estáticas recebidas ao nascer.", "D) Encarar obstáculos com persistência e acreditar que é possível desenvolver capacidades e inteligência por meio do esforço e da experiência."],
+                answer: 3, justification: "Páginas 66, 67 e 69 do PDF. A mentalidade de crescimento baseia-se na crença de que as pessoas podem se modificar e desenvolver pelo esforço contínuo. As alternativas A, B e C descrevem comportamentos estritos da Mentalidade Fixa, que foge de desafios e vê o erro como prova de incapacidade."
+            },
+            {
+                source: "study", unit: 1, theme: "O Poder dos Erros no Cérebro",
+                question: "A pesquisadora Jo Boaler, baseada nos estudos de Jason Moser, descreve o que ocorre neurologicamente quando cometemos erros. O sinal cerebral denominado 'Pe' caracteriza-se por:",
+                options: ["A) Aumentar a atividade elétrica cerebral independentemente de a pessoa saber ou não que cometeu um erro (Negatividade Relacionada ao Erro).", "B) Bloquear a formação de sinapses, fazendo com que estudantes com mentalidade fixa errem mais.", "C) Indicar que o cérebro prefere a 'supressão por repetição', ignorando os erros para poupar energia.", "D) Ser um sinal que reflete a atenção consciente aos erros, acontecendo especificamente quando existe a consciência de que um erro foi cometido e a atenção é direcionada a ele."],
+                answer: 3, justification: "Página 70 do PDF. A alternativa correta traz a citação exata do texto. A resposta 'A' está incorreta porque descreve o sinal NRE (Negatividade Relacionada ao Erro), que ocorre havendo consciência ou não. O 'Pe' depende estritamente da atenção consciente dada ao erro."
+            },
+            {
+                source: "study", unit: 1, theme: "Estratégias de Estudo - Skimming",
+                question: "Para otimizar o aprendizado e poupar energia cognitiva de maneira inteligente, o material propõe um 'cardápio de estratégias'. A técnica de 'Skimming' é descrita como:",
+                options: ["A) Fazer anotações manuscritas e usar códigos de símbolos nas margens do texto para destacar dúvidas e reflexões.", "B) Ler rapidamente um texto ('passar os olhos') para obter uma visão geral, identificar os tópicos principais e criar um preparo mental para o estudo.", "C) Criar fichas de resumo contendo o referencial bibliográfico da ABNT, citações diretas e ideias-chave da obra para uso futuro.", "D) Pintar as diferentes partes estruturais de um artigo científico (como título, resumo e introdução) com cores distintas."],
+                answer: 1, justification: "Página 75 do PDF. O 'Skimming' significa escanear. É uma leitura rápida com a intenção de ter uma visão geral e capturar os tópicos principais. (A alternativa A descreve as Marginálias; a C descreve o Fichamento; e a D descreve a Paleta de Cores)."
+            },
+            {
+                source: "study", unit: 1, theme: "Estratégias de Estudo - Fichamento",
+                question: "A estratégia do 'Fichamento' é amplamente utilizada no trabalho acadêmico. Segundo a apostila, qual é a principal finalidade de elaborar fichas contendo cabeçalho, referência ABNT e resumo com ideias-chave de um material bibliográfico?",
+                options: ["A) Realizar uma leitura rápida e superficial (escanear) apenas para identificar o tema principal do texto.", "B) Guardar o registro da leitura para consultas futuras, dispensando a necessidade de ler o material inteiro novamente na hora de fundamentar um texto.", "C) Registrar símbolos como '?' ou '!' nas margens do livro para manter um diálogo visual constante com as ideias do autor.", "D) Praticar a recordação ativa, tirando os olhos do texto imediatamente e tentando recitá-lo de memória."],
+                answer: 1, justification: "Página 86 do PDF. O fichamento destina-se ao registro estruturado da leitura. Um de seus grandes objetivos listados no material é 'Guardá-lo para uso futuro na forma de consulta, dispensando a necessidade de ter de refazer toda a leitura'. (As outras alternativas descrevem Skimming, Marginálias e Recordação Ativa)."
+            },
+            {
+                source: "study", unit: 1, theme: "Estratégias de Estudo - Paleta de Cores",
+                question: "A estratégia denominada 'Paleta de cores com uso de artigo científico' é sugerida no material da disciplina com qual objetivo principal?",
+                options: ["A) Ajudar o estudante a identificar visualmente as partes que estruturam um artigo científico (título, resumo, introdução, etc.) através da coloração dessas seções.", "B) Destacar as palavras-chave e sublinhar apenas as frases principais de um parágrafo para facilitar a fixação da leitura (grifos inteligentes).", "C) Catalogar e arquivar citações diretas curtas e longas em fichas de papel pautado para a elaboração de trabalhos de conclusão de curso.", "D) Sinalizar passagens inteiras que exigem uma pesquisa futura no Google Acadêmico sobre uma nova teoria."],
+                answer: 0, justification: "Páginas 87 e 88. A estratégia orienta a pintar as partes de um artigo com cores distintas. O objetivo explícito na página 88 é ajudar o aluno a 'visualizar as partes que compõem um artigo de maneira mais dinâmica' para compreender o estilo e o desencadeamento da escrita científica."
+            },
+            {
+                source: "study", unit: 1, theme: "Tipos de Conhecimento - Mito",
+                question: "O conhecimento mítico foi, presumivelmente, a primeira forma de organização da realidade a partir da experiência humana. Assinale a afirmativa que apresenta corretamente as características do 'Mito' descritas na apostila:",
+                options: ["A) Foi historicamente substituído pela filosofia, deixando de existir e de influenciar as ações humanas a partir do Renascimento.", "B) Caracteriza-se pela busca das regularidades e leis naturais, valendo-se da experimentação e da objetividade matemática.", "C) Baseia-se na crença, e não na evidência racional. Consiste num pensamento mágico que busca dar segurança ao ser humano, estando presente ainda hoje em crenças que não se sustentam pela lógica.", "D) Tem o caráter exclusivamente estético e expressa seus sentimentos apenas por meio das artes plásticas e do cinema."],
+                answer: 2, justification: "Páginas 108 e 109. O PDF ensina que o critério do mito é a crença (pensamento mágico) em busca de segurança ou de afastar o mal. O texto deixa claro na página 109 que os mitos NÃO desapareceram da sociedade atual, influenciando ações (ex: 'é perigoso despertar um sonâmbulo')."
+            },
+            {
+                source: "study", unit: 1, theme: "Tipos de Conhecimento - Senso Comum",
+                question: "O Senso Comum é o conhecimento espontâneo apreendido no dia a dia. Por que o material didático afirma que o senso comum, em algumas circunstâncias, pode ser problemático?",
+                options: ["A) Porque ele exige experimentos complexos de laboratório que a população não compreende.", "B) Porque ele é radical, rigoroso e exige que cada pessoa duvide das tradições e do 'status quo'.", "C) Porque utiliza uma linguagem excessivamente matemática para resolver problemas práticos rotineiros.", "D) Porque ele tende a ser acrítico e pode se tornar prisioneiro da 'ideologia' (uma falsa consciência, segundo Marx), levando a população a aceitar passivamente formas de dominação."],
+                answer: 3, justification: "Páginas 113 a 116. O senso comum é uma mistura de saberes práticos, porém tende a 'aceitar as coisas tal como são'. O perigo destacado na página 116 é que ele pode se tornar prisioneiro da ideologia, que tem a função de manter a dominação mascarando ilusões."
+            },
+            {
+                source: "study", unit: 1, theme: "Tipos de Conhecimento - Filosofia",
+                question: "A Filosofia assume uma atitude de questionamento perante as certezas pré-estabelecidas e busca compreender a realidade por meio da razão. Na apostila, são destacadas três características centrais do fazer filosófico. Quais são elas?",
+                options: ["A) Ser empírica (baseada na observação), quantitativa e utilitária.", "B) Ser mítica (mágica), sensível e puramente simbólica.", "C) Ser radical (ir à raiz), rigorosa (seguir um método) e de conjunto (considerar os problemas dentro de um contexto maior de fatores).", "D) Ser fragmentada, provisória e focada exclusivamente no método científico laboratorial."],
+                answer: 2, justification: "Páginas 118 e 119 do PDF. As três características da Filosofia estão listadas explicitamente: 1) Radical (refletir em profundidade/raiz); 2) Rigorosa (método e questionamento do superficial); 3) De conjunto (problemas interligados num contexto político/histórico)."
+            },
+            {
+                source: "study", unit: 1, theme: "Os Limites e Impactos da Ciência",
+                question: "A partir do Renascimento, a Ciência se separou da Filosofia, ganhando contornos utilitários. Sobre a Ciência, o texto afirma que 'é necessário superar a visão de que a ciência é neutra'. O que a apostila argumenta para sustentar essa ausência de neutralidade?",
+                options: ["A) Todo conhecimento científico é definitivo; logo, a ciência não precisa de financiamentos para evoluir.", "B) O método científico substituiu as artes plásticas, eliminando o senso estético da humanidade em favor dos lucros.", "C) A ciência tornou-se indispensável à atividade econômica e política. Assim, empresas e governos, em busca de lucros ou poder, decidem quais pesquisas financiar, privilegiando certas áreas em detrimento de outras.", "D) A comunidade científica recusa-se a usar a matemática, preferindo os mitos primitivos para justificar suas descobertas."],
+                answer: 2, justification: "Páginas 121 e 122. A apostila traz a citação de Chauí argumentando que devemos abandonar o mito da ciência neutra porque ela se tornou 'parte integrante e indispensável da atividade econômica'. Financiadores (governos e corporações) definem o que é pesquisado com base em seus interesses (inovação, poder bélico, lucros)."
+            },
+            {
+                source: "study", unit: 1, theme: "Etapas do Método Científico",
+                question: "O conhecimento científico, diferentemente do senso comum, busca leis naturais verificáveis. O 'método científico' segue uma sequência de procedimentos descrita no material. Qual é a sequência lógica apontada na apostila?",
+                options: ["A) Experimentação inicial, formulação de mitos subjetivos e generalização.", "B) Observação/questionamento, formulação de hipóteses, experimentação (testagem) e generalização.", "C) Criação de dogmas inquestionáveis, observação secundária e intuição.", "D) Levantamento bibliográfico, fichamento crítico de textos e publicação artística."],
+                answer: 1, justification: "Página 120. O PDF descreve a estrutura metodológica exatamente nesta ordem sequencial: 'tem início na observação e questionamento de algum aspecto da realidade, seguido de formulação de hipóteses, experimentação (testagem dessas hipóteses). A seguir, vem a generalização...'."
+            },
+            // 20 das Unidades 2 e 3 (índices 31 a 50)
+            {
+                source: "study", unit: 2, theme: "SNCTI - Atores",
+                question: "O Sistema Nacional de Ciência, Tecnologia e Inovação (SNCTI) depende da articulação entre quem produz, quem financia e quem consome ciência no Brasil. De acordo com a divisão apresentada no material, quais instituições compõem a categoria dos 'Operadores de CT&I'?",
+                options: ["A) O Ministério da Ciência, Tecnologia e Inovações (MCTIC) e as agências reguladoras.", "B) O Congresso Nacional e as Centrais Sindicais.", "C) O CNPq, a CAPES, a FINEP e o BNDES, que gerenciam os recursos financeiros.", "D) As Universidades, os Institutos de Pesquisa, os Parques Tecnológicos e as Incubadoras de Empresas."],
+                answer: 3, justification: "A resposta encontra-se no esquema da página 7 (e texto da página 10). Os Operadores de CT&I são o grupo que usufrui do sistema para executar a pesquisa e a inovação na prática (Universidades, empresas, institutos de pesquisa, incubadoras). As opções A e B descrevem agentes políticos; a opção C descreve as agências de fomento."
+            },
+            {
+                source: "study", unit: 2, theme: "Propriedade Intelectual e Industrial",
+                question: "A propriedade intelectual protege as criações da mente humana. O material apresenta uma subdivisão desse conceito. A proteção garantida a uma 'patente de invenção' e a proteção sobre 'programas de computador' pertencem, respectivamente, a quais ramos da propriedade intelectual?",
+                options: ["A) Propriedade Industrial e Direito Autoral.", "B) Proteção Sui Generis e Propriedade Industrial.", "C) Direito Autoral e Proteção Sui Generis.", "D) Ambas pertencem exclusivamente à Proteção Sui Generis."],
+                answer: 0, justification: "Com base no fluxograma da página 16, a Propriedade Intelectual se divide em três ramos. A 'Patente' está sob o braço da Propriedade Industrial, enquanto os 'Registros de programas de computador' estão sob o braço do Direito Autoral."
+            },
+            {
+                source: "study", unit: 2, theme: "Royalties",
+                question: "No contexto do registro de invenções, o material cita o caso da tecnologia 'touch screen', desenvolvida pela empresa de Steve Jobs, que foi licenciada para uso por empresas concorrentes mediante o pagamento de 'royalties'. O que o termo 'royalties' significa segundo a apostila?",
+                options: ["A) É a taxa cobrada pelo Instituto Nacional da Propriedade Industrial (INPI) para realizar a busca de anterioridade.", "B) É a compensação financeira (uma espécie de aluguel) paga a um proprietário pelo direito de usar, explorar ou comercializar sua inovação.", "C) É o documento oficial que transfere permanentemente a autoria de uma invenção para uma empresa parceira.", "D) É o recurso público a fundo perdido destinado por agências de fomento (como a FINEP) para apoiar startups."],
+                answer: 1, justification: "Na página 17, o termo royalties é definido exatamente como 'uma compensação financeira paga por alguém a um proprietário pelo direito de usar, explorar e comercializar produtos, marcas, obras e terrenos... o termo será entendido como um aluguel do uso do invento'."
+            },
+            {
+                source: "study", unit: 2, theme: "Incubadoras vs. Aceleradoras",
+                question: "Para que uma invenção chegue ao mercado, é comum a abertura de startups com apoio logístico e estratégico. O texto diferencia o papel das incubadoras e das aceleradoras. Assinale a principal característica das aceleradoras segundo o SEBRAE-MG citado no material:",
+                options: ["A) São obrigatoriamente vinculadas a universidades e focam no desenvolvimento de pesquisa acadêmica pura, sem visar o mercado.", "B) São espaços governamentais que apoiam empresas nascentes exclusivamente a partir de necessidades regionais pré-definidas.", "C) São programas públicos ou privados que ajudam negócios em fase inicial a crescer rápido, geralmente em troca de participação societária (Equity) na startup.", "D) Focam apenas na doação de espaço físico, não oferecendo suporte financeiro, mentorias ou conexões comerciais."],
+                answer: 2, justification: "A apostila diferencia incubadoras (ligadas a governos/universidades, com foco regional) das aceleradoras. Na página 27, a aceleradora é definida como programas que buscam crescimento rápido em troca de participação nas startups (conhecido como Equity), oferecendo networking e aportes."
+            },
+            {
+                source: "study", unit: 3, theme: "Objetivos na Pesquisa Científica",
+                question: "Na formulação de uma pesquisa, após estabelecer a problemática, é necessário definir as pretensões investigativas do pesquisador. Sobre a diferença entre o Objetivo Geral e os Objetivos Específicos, é correto afirmar:",
+                options: ["A) Os objetivos específicos tratam das etapas de coleta de dados estatísticos, enquanto o geral descreve os custos do projeto.", "B) O objetivo geral é uma descrição ampla sobre a intenção da pesquisa, escrito em parágrafo único; os objetivos específicos são os desdobramentos (ações investigativas) para alcançar o geral, escritos em tópicos.", "C) Não há obrigatoriedade de usar verbos no infinitivo na redação dos objetivos específicos.", "D) O objetivo geral é formulado após a análise dos dados, enquanto os objetivos específicos são criados antes da pesquisa de campo."],
+                answer: 1, justification: "As páginas 47 e 48 do material deixam claro que o objetivo geral descreve a intenção ampla da pesquisa (em parágrafo), enquanto os específicos são os desdobramentos/ações para alcançá-lo (em formato de tópicos). Ambos devem usar verbos no infinitivo (opção C falsa). Os objetivos são elaborados antes da coleta de dados (opção D falsa)."
+            },
+            {
+                source: "study", unit: 3, theme: "Pesquisa Qualitativa vs. Quantitativa",
+                question: "A metodologia descreve o caminho da pesquisa. Sobre a diferença entre pesquisa qualitativa e pesquisa quantitativa descrita no material, avalie as afirmativas:\n\nI. A pesquisa quantitativa trata de problemáticas amplas, grandes amostras e análises estatísticas, com foco no exato e no numérico.\nII. A pesquisa qualitativa trabalha com a exploração de dados descritivos, discursos e busca de significados subjetivos.\nIII. A pesquisa qualitativa é considerada superior à quantitativa por abranger o comportamento e as emoções humanas.\n\nEstá correto o que se afirma em:",
+                options: ["A) I, apenas.", "B) II, apenas.", "C) I e II, apenas.", "D) I, II e III."],
+                answer: 2, justification: "Páginas 61 e 62. A afirmativa I define corretamente a pesquisa quantitativa. A afirmativa II define a pesquisa qualitativa. A afirmativa III está INCORRETA porque o próprio material ressalta expressamente na página 62: 'não há um tipo de pesquisa melhor que o outro, há formas de fazer pesquisa diferentes'."
+            },
+            {
+                source: "study", unit: 3, theme: "Revisão da Literatura (Referencial Teórico)",
+                question: "A revisão da literatura (ou referencial teórico) é a etapa em que o pesquisador organiza os conhecimentos já produzidos sobre o seu tema. De acordo com a apostila, qual deve ser a postura do pesquisador ao redigir essa seção?",
+                options: ["A) Realizar uma mera colagem sequencial de resumos de obras, sem a necessidade de expor sua opinião ou interpretação.", "B) Inserir os dados estatísticos inéditos coletados em sua própria pesquisa de campo (questionários e entrevistas).", "C) Apresentar uma discussão em que compartilha sua interpretação, posicionamento e o diálogo entre os autores selecionados que sustentam sua investigação.", "D) Inventar novos termos e teorias sem referenciá-las a nenhum autor para garantir a originalidade total do seu trabalho."],
+                answer: 2, justification: "A página 59 do PDF afirma categoricamente: 'a revisão teórica não trata simplesmente de uma transcrição do que o pesquisador leu... Trata-se de uma discussão entre o pesquisador e o material selecionado, envolve o posicionamento e olhar do pesquisador...'. Os dados de campo entram na etapa de 'Análise de dados' (opção B errada)."
+            },
+            {
+                source: "study", unit: 3, theme: "Termo de Consentimento",
+                question: "Ao realizar o trabalho de campo envolvendo a participação de outras pessoas (por meio de entrevistas ou grupos focais), o pesquisador precisa respeitar aspectos éticos fundamentais. Segundo o material, o que é o Termo de Consentimento (TC)?",
+                options: ["A) Uma licença paga ao INPI para utilizar um produto registrado durante a pesquisa.", "B) Uma ficha bibliográfica que lista as obras utilizadas no projeto.", "C) O contrato de financiamento assinado entre a startup do pesquisador e a agência de fomento (CNPq, FINEP).", "D) Um documento com os dados da pesquisa e do participante, por meio do qual ele declara estar de acordo em participar do estudo e permite o uso das informações geradas."],
+                answer: 3, justification: "Página 68. O texto descreve o Termo de Consentimento como 'um documento que pode ser preparado pelo próprio pesquisador, em que constam os dados da pesquisa e os dados do participante, para que ele indique o seu acordo ou anuência'."
+            },
+            {
+                source: "study", unit: 3, theme: "Tipos de Trabalhos Acadêmicos",
+                question: "Os trabalhos acadêmicos podem assumir diferentes formatos de acordo com a exigência do curso. Severino (2017), citado no material, faz uma diferenciação entre 'Trabalhos Didáticos' e 'Trabalhos de Monografia'. Qual alternativa apresenta essa diferença corretamente?",
+                options: ["A) A monografia não exige nenhuma originalidade, enquanto o trabalho didático é a produção mais aprofundada existente na universidade.", "B) O trabalho didático (como relatórios de estágio) é geralmente recapitulativo, orientado e não exige originalidade profunda; já a monografia caracteriza-se pela delimitação e tratamento estruturado e profundo de um único tema.", "C) A monografia utiliza apenas métodos de pesquisa qualitativa, enquanto o trabalho didático foca em dados estatísticos e amostragem numérica.", "D) Ambos são exatamente a mesma coisa, possuindo os mesmos limites de páginas e o mesmo nível de rigor para a publicação em revistas científicas."],
+                answer: 1, justification: "Páginas 148 e 149 do PDF. A monografia é definida pelo 'tratamento estruturado de um único tema, devidamente especificado... pela unicidade e profundidade'. Os trabalhos didáticos são relatórios feitos a partir da orientação do professor, 'são geralmente recapitulativos... não exige originalidade'."
+            },
+            {
+                source: "study", unit: 3, theme: "Normas ABNT - Citações",
+                question: "Para garantir a integridade da escrita acadêmica e evitar o plágio, o pesquisador deve dominar as regras de citação. Conforme as normas técnicas expostas na apostila, como deve ser elaborada uma Citação Direta Longa?",
+                options: ["A) Deve ser inserida de forma idêntica ao original no próprio corpo do parágrafo, envolvida obrigatoriamente por aspas duplas.", "B) O texto deve ser parafraseado (explicado com as palavras do aluno), indicando apenas o autor e o ano no final da frase.", "C) Deve ser destacada à parte, recuada (4 cm) do corpo do texto, com fonte menor e sem a utilização de aspas, informando autor, ano e página.", "D) Deve figurar exclusivamente nas notas de rodapé da página, sem aparecer na lista de referências final."],
+                answer: 2, justification: "Página 75. As regras da ABNT afirmam: Citações de até três linhas (curtas) ficam no texto entre aspas. Citações maiores que três linhas (longas) 'devem ser destacadas à parte, respeitando as normas técnicas, recuadas ao corpo do texto (4cm)' e sem o uso de aspas. Ambas as diretas exigem página."
+            },
+            {
+                source: "study", unit: 3, theme: "Fichas de Leitura e Fichas Bibliográficas",
+                question: "Ao realizar a revisão teórica, é crucial que o pesquisador se mantenha organizado para resgatar as informações no futuro. O texto propõe o uso de 'Fichas de leitura' e 'Fichas bibliográficas'. Qual é a diferença prática entre elas?",
+                options: ["A) As fichas de leitura contêm os rascunhos da análise de dados do trabalho de campo; as fichas bibliográficas servem apenas para criar o título final do artigo.", "B) Na ficha de leitura registram-se os resumos, os apontamentos e as reflexões sobre o conteúdo; na ficha bibliográfica, registram-se os dados de catalogação da obra (autor, título, local, página e referência ABNT completa).", "C) A ficha de leitura é utilizada obrigatoriamente no final da monografia como Anexo; a ficha bibliográfica é o primeiro capítulo da tese.", "D) Ambas são conceitos idênticos e o termo varia dependendo de o material ser um livro físico ou um site online."],
+                answer: 1, justification: "As páginas 56, 57 e 58 apresentam os modelos práticos de cada ficha. A Ficha de Leitura guarda 'o que você leu, resumos e interpretações' (exemplo Quadro 2). A Ficha Bibliográfica guarda os dados da obra para referenciá-la, incluindo citações diretas para uso e a referência formal (Quadro 3)."
+            },
+            {
+                source: "study", unit: 3, theme: "Métodos Lógicos: Indutivo",
+                question: "A ciência evolui a partir dos métodos utilizados pelos pesquisadores. Sobre o Método Indutivo, abordado no material da disciplina, assinale a alternativa correta:",
+                options: ["A) Ele parte sempre de premissas gerais inquestionáveis para tentar explicar e deduzir uma consequência de um caso único.", "B) Baseia-se no conflito entre tese, antítese e síntese, sendo exclusivo das pesquisas sociológicas qualitativas.", "C) É o processo mental no qual se parte de um conjunto de dados ou fatos particulares e específicos para inferir uma verdade geral, podendo resultar na falácia de amostra insuficiente.", "D) Dispensa qualquer coleta de dados empíricos, pois resolve seus problemas utilizando exclusivamente a Matemática (Axiomas e Teoremas)."],
+                answer: 2, justification: "O PDF define claramente o Método Indutivo na página 93: 'partindo de um conjunto de dados particulares... infere-se uma verdade geral ou universal'. A página 99 alerta para a 'falácia da amostra insuficiente' (quando a generalização é feita com dados em pouca quantidade)."
+            },
+            {
+                source: "study", unit: 3, theme: "Métodos Lógicos: Dedutivo",
+                question: "No material de estudo, o raciocínio do Método Dedutivo é ilustrado pelo seguinte exemplo: 'Todos os mamíferos têm pelos (Premissa 1); Todo cachorro é mamífero (Premissa 2); Logo, o cachorro tem pelos (Conclusão)'. Com base no exemplo, qual é a principal característica desse método?",
+                options: ["A) A conclusão da dedução traz conhecimentos factuais totalmente inéditos que contradizem o que foi dito nas premissas.", "B) Parte de premissas gerais para estabelecer conclusões específicas, sendo que as informações acerca da conclusão já estavam, ao menos implicitamente, contidas nas premissas originais.", "C) Baseia-se obrigatoriamente na realização de entrevistas focais (grupos) para que o pesquisador colete as opiniões necessárias à formulação da primeira premissa.", "D) O pesquisador só alcançará a dedução se utilizar ferramentas estatísticas avançadas e gráficos tridimensionais."],
+                answer: 1, justification: "Páginas 100 e 101. O método dedutivo parte de constatações/premissas gerais e chega a uma conclusão particular. O texto de Marconi e Lakatos (2017) ressalta que no método dedutivo 'o conteúdo factual ou todas as informações acerca da conclusão já estavam, ao menos implicitamente, nas premissas'."
+            },
+            {
+                source: "study", unit: 3, theme: "Métodos Lógicos: Hipotético-Dedutivo",
+                question: "No processo de uma pesquisa baseada no Método Hipotético-Dedutivo (segundo Popper/Bunge), o pesquisador segue etapas precisas. Qual é o caminho investigatório estruturado por esse método?",
+                options: ["A) A observação empírica aleatória, que leva imediatamente à generalização de uma lei, sem necessidade de levantar problemas.", "B) O processo inicia com a Expectativa/Conhecimento Prévio, da qual surge um Problema que exige a criação de Conjecturas (hipóteses), as quais serão então submetidas aos Testes de Falseamento para serem corroboradas ou refutadas.", "C) A estruturação inicial de uma Lei Imutável, seguida de Testes Qualitativos, ignorando-se qualquer expectativa da comunidade científica.", "D) Tese, seguida da formulação de uma Antítese, culminando no choque da Síntese final."],
+                answer: 1, justification: "A página 104 sumariza explicitamente os testes de falseamento neste exato fluxo: 'Expectativa ou conhecimento prévio -> problema -> conjecturas -> falseamento'."
+            },
+            {
+                source: "study", unit: 3, theme: "Métodos Lógicos: Dialético",
+                question: "O Método Dialético, bastante empregado em pesquisas qualitativas nas Ciências Humanas, analisa os fatos dentro do seu contexto de contradições sociais. Um de seus pilares fundamentais como lei de pensamento é a 'Mudança Dialética' (A Negação da Negação). O que essa lei propõe?",
+                options: ["A) Que a dupla negação de um fato leva a pesquisa de volta exatamente ao seu ponto de partida original (a tese inicial não se altera).", "B) O processo do pensamento segue da Tese para a Antítese (conflito/negação) e culmina na Síntese, que é uma proposição positiva superior e nova (dupla negação), a qual poderá ser novamente questionada no futuro.", "C) Afirma que não há relação de interdependência entre os fenômenos da natureza e que cada evento ocorre de maneira estática e isolada.", "D) Defende que toda mudança quantitativa de estatísticas leva o método dialético a fracassar como sistema lógico."],
+                answer: 1, justification: "Páginas 108 e 109 do PDF. A lei da mudança dialética (Negação da negação) funciona na estrutura de: Tese (ponto de partida) -> Antítese (negação ou transformação) -> Síntese (negação da antítese gerando algo novo). O texto ressalta que 'a dupla negação NÃO significa o restabelecimento da afirmação primária, mas resulta em uma coisa nova'."
+            },
+            {
+                source: "study", unit: 3, theme: "Métodos de Procedimento",
+                question: "Nas pesquisas sociais, além dos métodos lógicos (de abordagem), utilizam-se os Métodos de Procedimento (etapas técnicas e mais restritas). Qual é a principal característica do 'Método Monográfico'?",
+                options: ["A) Consiste em manipular variáveis em ambientes laboratoriais isolados para determinar causas precisas de reações biológicas.", "B) Funciona através da classificação sistemática da idade e da renda dos participantes, transformando suas respostas unicamente em gráficos estatísticos.", "C) Consiste em estudar em profundidade um assunto específico, respeitando a 'totalidade' de um caso concreto único (como um grupo étnico, uma escola, uma aldeia) sem dissociar seus elementos constituintes.", "D) Preocupa-se em identificar apenas as funções latentes e manifestas da ideologia burguesa."],
+                answer: 2, justification: "Página 113. O Método Monográfico (um tipo de Estudo de Caso) 'consiste em estudar um assunto específico... Tem a vantagem de respeitar a 'totalidade' dos grupos, ou seja, primeiro estuda-se a unidade concreta, sem que seus elementos constituintes sejam dissociados'."
+            },
+            {
+                source: "study", unit: 3, theme: "Métodos de Procedimento",
+                question: "Imagine que um grupo de cientistas precisa investigar o efeito de diferentes quantidades de água e luz no desenvolvimento de uma plantação. Para que os resultados sejam válidos, eles criam ambientes idênticos e testam variáveis específicas. Qual é o Método de Procedimento aplicado nessa situação?",
+                options: ["A) Método Funcionalista.", "B) Método Histórico.", "C) Método Experimental.", "D) Método Ativo."],
+                answer: 2, justification: "Páginas 115 e 116. O Método Experimental é definido textualmente como aquele utilizado 'quando existe a necessidade de controlar variáveis que influenciam o fenômeno... garantindo que apenas [a variável do teste] seja o fator que influencia'. O exemplo da água/luz/adubo é muito semelhante ao trazido pelo PDF."
+            },
+            {
+                source: "study", unit: 3, theme: "Uso das Notas de Rodapé",
+                question: "Na redação final da pesquisa científica, respeitando a normatização da ABNT, frequentemente os pesquisadores utilizam 'notas de rodapé'. Segundo o estudo sobre redação acadêmica presente na apostila, em qual situação o uso da nota de rodapé é correto?",
+                options: ["A) Ela serve para adicionar informações secundárias ou explicações complementares que, se estivessem no corpo principal do texto principal, causariam a interrupção brusca da leitura ou impressão de fuga do assunto.", "B) Ela deve substituir obrigatoriamente as aspas em citações diretas curtas.", "C) Ela deve ser usada exclusivamente para a confecção da lista final de Referências Bibliográficas (NBR 6023).", "D) Ela é o único local do texto onde é permitido ao pesquisador usar a escrita em primeira pessoa (Eu acho)."],
+                answer: 0, justification: "Páginas 145 e 146. A apostila explica: 'caso você precise acrescentar observações sobre uma citação ou explicar melhor algum elemento... mas que não estão relacionados ao corpo do texto, você pode inserir uma nota de rodapé... Assim você não interrompe a leitura sobre o assunto... não causa impressão de fuga'."
+            },
+            {
+                source: "study", unit: 3, theme: "O Problema de Pesquisa",
+                question: "Durante o desenvolvimento do trabalho acadêmico, o pesquisador se depara com a formulação do problema. Como a apostila orienta a elaboração estrutural da problematização na ciência?",
+                options: ["A) O problema de pesquisa é sempre escrito em formato de afirmação conclusiva para eliminar incertezas no início do artigo.", "B) O problema de pesquisa deve ser uma sentença interrogativa (uma pergunta) clara e direta sobre a relação das variáveis que o pesquisador buscará resolver.", "C) O problema de pesquisa deve obrigatoriamente possuir até sete parágrafos com citações longas no formato ABNT.", "D) A formulação do problema dispensa o estado da arte e foca exclusivamente no senso comum do pesquisador."],
+                answer: 1, justification: "Página 45. A apostila define: 'O problema de pesquisa é sempre em formato de pergunta'. A página 46 complementa: 'Deve ser uma sentença interrogativa ou uma questão sobre a relação de duas ou mais variáveis/fenômenos... de fácil compreensão e possível de ser respondida'."
+            },
+            {
+                source: "study", unit: 2, theme: "Etapas do SNCTI",
+                question: "O material apresenta o Ciclo de Funcionamento do SNCTI através do estudo de caso hipotético do personagem 'Pedro'. Nesse diagrama, a passagem de uma boa ideia para um produto pronto passa por várias fases. Onde, normalmente, ocorre o 'desenvolvimento e a maturação de protótipos em ambiente protegido e auxiliado' antes da escalabilidade para a sociedade?",
+                options: ["A) Somente no interior do Banco Nacional de Desenvolvimento Econômico e Social (BNDES).", "B) No próprio Ministério da Ciência, Tecnologia e Inovações (MCTIC), na sede do Ministro.", "C) Exclusivamente no setor das Centrais Sindicais dos trabalhadores.", "D) Nas Incubadoras e Centros de Inovação, que funcionam como ambientes preparados com infraestrutura e apoio para o nascimento de startups e empresas inovadoras."],
+                answer: 3, justification: "Nas páginas 30 (fluxograma da Figura 4) e 33 (texto), a apostila explica que o 'Ambiente para o Desenvolvimento (etapa 7)' engloba as Incubadoras e Centros de Inovação, onde 'existem outros Pedros que podem colaborar... amparo para esse primeiro momento do empreendimento'."
+            }
+        ];
+
+        // ==========================================
+        // VARIÁVEIS DE ESTADO E PERSISTÊNCIA
+        // ==========================================
+        let currentQuestionIndex = 0;
+        let activeQuizSequence = [];
+        let currentSequencePos = 0;
+        let sessionScore = 0;
+        let score = 0;
+        let hasAnswered = false;
+        let refazerAnswered = false; // Controle contra cliques múltiplos na revisão de erros
+        
+        // Estrutura de dados persistente (salva no localStorage)
+        let appData = {
+            totalAnswered: 0,
+            errors: {}, // key: questionIndex -> { attempts, wrong, correct, status, lastChosen, unit, theme }
+            history: {} // key: questionIndex -> { unit, theme, isCorrect }
+        };
+
+        // Carregar dados persistentes ao iniciar
+        function loadAppData() {
+            const saved = localStorage.getItem('studyApp_progress');
+            if (saved) {
+                try {
+                    appData = JSON.parse(saved);
+                } catch (e) {
+                    console.error("Erro ao carregar progresso:", e);
+                }
+            }
+            // Migração de segurança: garantir que o 'history' exista sem apagar dados antigos
+            if (!appData.history) {
+                appData.history = {};
+                for (let qIdx in appData.errors) {
+                    const errData = appData.errors[qIdx];
+                    appData.history[qIdx] = {
+                        unit: errData.unit,
+                        theme: errData.theme,
+                        isCorrect: errData.status === 'corrected'
+                    };
+                }
+                saveAppData();
+            }
+        }
+
+        // Salvar dados persistentes
+        function saveAppData() {
+            localStorage.setItem('studyApp_progress', JSON.stringify(appData));
+        }
+
+        // ==========================================
+        // REFERÊNCIAS DO DOM
+        // ==========================================
+        const homeScreenEl = document.getElementById('home-screen');
+        const studyGuidesMenuEl = document.getElementById('study-guides-menu');
+        const studyGuideViewerEl = document.getElementById('study-guide-viewer');
+        const quizModesMenuEl = document.getElementById('quiz-modes-menu');
+        const headerEl = document.getElementById('header');
+        const quizAreaEl = document.getElementById('quiz-area');
+        const resultAreaEl = document.getElementById('result-area');
+        const errorDashboardAreaEl = document.getElementById('error-dashboard-area');
+        const errorDetailAreaEl = document.getElementById('error-detail-area');
+        const performanceAreaEl = document.getElementById('performance-area');
+
+        // Quiz DOM
+        const questionCounterEl = document.getElementById('question-counter');
+        const progressBarEl = document.getElementById('progress-bar');
+        const unitBadgeEl = document.getElementById('unit-badge');
+        const themeBadgeEl = document.getElementById('theme-badge');
+        const questionTextEl = document.getElementById('question-text');
+        const optionsContainerEl = document.getElementById('options-container');
+        const feedbackBoxEl = document.getElementById('feedback-box');
+        const nextBtnEl = document.getElementById('next-btn');
+
+        // ==========================================
+        // FUNÇÕES DE NAVEGAÇÃO
+        // ==========================================
+        function hideAllScreens() {
+            homeScreenEl.classList.add('hidden');
+            studyGuidesMenuEl.classList.add('hidden');
+            studyGuideViewerEl.classList.add('hidden');
+            if (typeof quizModesMenuEl !== 'undefined') quizModesMenuEl.classList.add('hidden');
+            headerEl.classList.add('hidden');
+            quizAreaEl.classList.add('hidden');
+            resultAreaEl.classList.add('hidden');
+            errorDashboardAreaEl.classList.add('hidden');
+            errorDetailAreaEl.classList.add('hidden');
+            performanceAreaEl.classList.add('hidden');
+        }
+
+        function showHome() {
+            hideAllScreens();
+            homeScreenEl.classList.remove('hidden');
+        }
+
+        // ==========================================
+        // LÓGICA DOS GUIAS DE ESTUDO
+        // ==========================================
+        function showStudyGuidesMenu() {
+            hideAllScreens();
+            studyGuidesMenuEl.classList.remove('hidden');
+            const container = document.getElementById('guides-list-container');
+            container.innerHTML = '';
+            
+            studyGuideData.forEach((guide, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'bg-white p-6 rounded-2xl border-2 border-gray-100 hover:border-indigo-400 hover:shadow-lg transition-all duration-300 text-left group flex flex-col items-start gap-4';
+                btn.innerHTML = `
+                    <div class="bg-gray-50 p-3 rounded-xl group-hover:bg-indigo-50 transition-colors">${guide.icon}</div>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-lg group-hover:text-indigo-700 transition-colors">${guide.title}</h3>
+                        <p class="text-sm text-gray-500 mt-1">Acessar resumo didático &rarr;</p>
+                    </div>`;
+                btn.onclick = () => openStudyGuide(index);
+                container.appendChild(btn);
+            });
+        }
+
+        function openStudyGuide(index) {
+            hideAllScreens();
+            studyGuideViewerEl.classList.remove('hidden');
+            const guide = studyGuideData[index];
+            document.getElementById('guide-viewer-title').innerText = guide.title;
+            const contentContainer = document.getElementById('guide-viewer-content');
+            contentContainer.innerHTML = guide.content;
+            contentContainer.scrollTop = 0;
+        }
+
+        // ==========================================
+        // LÓGICA DO SIMULADOR (QUIZ)
+        // ==========================================
+        function showQuizModesMenu() {
+            hideAllScreens();
+            quizModesMenuEl.classList.remove('hidden');
+            const container = document.getElementById('theme-list-container');
+            container.innerHTML = '';
+            
+            const themesByUnit = {};
+            quizData.forEach(q => {
+                const u = q.unit || 'Outros';
+                if(!themesByUnit[u]) themesByUnit[u] = new Set();
+                themesByUnit[u].add(q.theme);
+            });
+            
+            for(let u in themesByUnit) {
+                let html = `
+                    <div class="mb-4">
+                        <h4 class="font-bold text-gray-700 mb-3 flex items-center gap-2">
+                            <span class="bg-indigo-100 text-indigo-700 w-8 h-8 rounded-lg flex items-center justify-center font-black">U${u}</span> 
+                            Temas da Unidade ${u}
+                        </h4>
+                        <div class="grid sm:grid-cols-2 gap-3">`;
+                
+                Array.from(themesByUnit[u]).forEach(t => {
+                    html += `<button onclick="startQuiz('theme', '${t}')" class="text-left bg-white border-2 border-gray-100 p-4 rounded-xl hover:border-emerald-400 hover:shadow-md transition-all text-gray-700 font-medium text-sm flex justify-between items-center group">
+                        <span class="truncate pr-2">${t}</span> 
+                        <span class="text-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity font-bold">&rarr;</span>
+                    </button>`;
+                });
+                html += `</div></div>`;
+                container.insertAdjacentHTML('beforeend', html);
+            }
+        }
+
+        function startQuiz(mode = 'geral', param = null) {
+            hideAllScreens();
+            headerEl.classList.remove('hidden');
+            quizAreaEl.classList.remove('hidden');
+            currentSequencePos = 0;
+            sessionScore = 0;
+            progressBarEl.style.width = '0%';
+            
+            activeQuizSequence = [];
+            if(mode === 'geral') {
+                activeQuizSequence = quizData.map((_, i) => i);
+                // Shuffle para misturar as unidades
+                for (let i = activeQuizSequence.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [activeQuizSequence[i], activeQuizSequence[j]] = [activeQuizSequence[j], activeQuizSequence[i]];
+                }
+            } else if(mode === 'theme') {
+                activeQuizSequence = quizData.map((q, i) => q.theme === param ? i : -1).filter(i => i !== -1);
+                // Shuffle questões do tema para evitar previsibilidade
+                for (let i = activeQuizSequence.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [activeQuizSequence[i], activeQuizSequence[j]] = [activeQuizSequence[j], activeQuizSequence[i]];
+                }
+            }
+            
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            window.scrollTo({ top: 0, behavior: 'smooth' }); // UX: Volta para o topo ao carregar nova questão
+            hasAnswered = false;
+            feedbackBoxEl.classList.add('hidden');
+            feedbackBoxEl.innerHTML = ''; 
+            nextBtnEl.classList.add('hidden');
+            
+            let realIndex = activeQuizSequence[currentSequencePos];
+            const currentQuestion = quizData[realIndex];
+            
+            questionCounterEl.innerText = `Questão ${currentSequencePos + 1} de ${activeQuizSequence.length}`;
+            const progressPercent = ((currentSequencePos) / activeQuizSequence.length) * 100;
+            progressBarEl.style.width = `${progressPercent}%`;
+            
+            if (currentQuestion.unit) {
+                unitBadgeEl.innerText = `Unidade ${currentQuestion.unit}`;
+                unitBadgeEl.classList.remove('hidden');
+            } else { unitBadgeEl.classList.add('hidden'); }
+
+            if (currentQuestion.theme) {
+                themeBadgeEl.innerText = currentQuestion.theme;
+                themeBadgeEl.classList.remove('hidden');
+            } else { themeBadgeEl.classList.add('hidden'); }
+
+            questionTextEl.innerText = currentQuestion.question;
+            optionsContainerEl.innerHTML = '';
+
+            currentQuestion.options.forEach((option, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn w-full text-left bg-white border-2 border-gray-100 shadow-sm hover:border-indigo-400 hover:bg-indigo-50 rounded-xl p-4 text-gray-700 font-medium focus:outline-none transition-all duration-200';
+                
+                let optionLetter = String.fromCharCode(65 + index);
+                let optionText = option;
+                const match = option.match(/^([A-Z])\)\s(.*)/);
+                if (match) { optionLetter = match[1]; optionText = match[2]; }
+
+                btn.innerHTML = `<span class="flex items-start gap-4">
+                                    <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-lg bg-gray-100 text-gray-500 font-bold text-sm border border-gray-200 mt-0.5">${optionLetter}</span>
+                                    <span class="leading-relaxed mt-1">${optionText.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')}</span>
+                                 </span>`;
+                btn.onclick = () => selectOption(index, btn);
+                optionsContainerEl.appendChild(btn);
+            });
+        }
+
+        function selectOption(selectedIndex, selectedBtn) {
+            if (hasAnswered) return;
+            hasAnswered = true;
+
+            let realIndex = activeQuizSequence[currentSequencePos];
+            const currentQuestion = quizData[realIndex];
+            const isCorrect = selectedIndex === currentQuestion.answer;
+            const allButtons = optionsContainerEl.querySelectorAll('button');
+
+            // --- REGISTRO PERSISTENTE ---
+            appData.totalAnswered++;
+            
+            let errRecord = appData.errors[realIndex] || {
+                attempts: 0, wrong: 0, correct: 0, status: 'pending', lastChosen: null,
+                unit: currentQuestion.unit || null, theme: currentQuestion.theme || 'Não especificado'
+            };
+            
+            errRecord.attempts++;
+            errRecord.lastChosen = selectedIndex;
+
+            appData.history[realIndex] = {
+                unit: currentQuestion.unit || null,
+                theme: currentQuestion.theme || 'Não especificado',
+                isCorrect: isCorrect || (appData.errors[realIndex] && appData.errors[realIndex].status === 'corrected')
+            };
+            
+            if (isCorrect) {
+                sessionScore++;
+                selectedBtn.classList.add('correct');
+                if (appData.errors[realIndex]) {
+                    errRecord.correct++;
+                    errRecord.status = 'corrected';
+                }
+            } else {
+                selectedBtn.classList.add('incorrect');
+                allButtons[currentQuestion.answer].classList.add('correct');
+                errRecord.wrong++;
+                errRecord.status = 'pending'; // Se errou, volta para pending, mesmo se já esteve corrigida.
+                appData.errors[realIndex] = errRecord;
+            }
+            saveAppData(); // Salva no localStorage
+            // ----------------------------
+
+            showFeedback(isCorrect, currentQuestion, selectedIndex, feedbackBoxEl);
+
+            allButtons.forEach(btn => {
+                btn.disabled = true;
+                btn.classList.add('opacity-70', 'cursor-not-allowed');
+                btn.classList.remove('hover:border-indigo-400', 'hover:bg-indigo-50', 'shadow-sm');
+            });
+
+            nextBtnEl.classList.remove('hidden');
+            if (currentSequencePos === activeQuizSequence.length - 1) { progressBarEl.style.width = `100%`; }
+        }
+
+        function showFeedback(isCorrect, questionObj, selectedIndex, containerEl) {
+            containerEl.classList.remove('hidden', 'bg-emerald-50', 'border-emerald-200', 'bg-red-50', 'border-red-200');
+            let htmlContent = '';
+            const correctIndex = questionObj.answer;
+            
+            // Renderiza o markdown de negrito nas justificativas
+            const formatJustification = questionObj.justification.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+
+            if (isCorrect) {
+                containerEl.classList.add('bg-emerald-50', 'border-emerald-200');
+                htmlContent = `
+                    <div class="flex items-start gap-3">
+                        <div class="mt-1"><svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
+                        <div>
+                            <h3 class="font-black text-lg mb-2 text-emerald-800 uppercase tracking-wide text-sm">✓ Resposta Correta</h3>
+                            <p class="text-emerald-900 leading-relaxed font-medium text-sm md:text-base">${formatJustification}</p>
+                        </div>
+                    </div>`;
+            } else {
+                containerEl.classList.add('bg-red-50', 'border-red-200');
+                let uLetter = String.fromCharCode(65 + selectedIndex);
+                let cLetter = String.fromCharCode(65 + correctIndex);
+                let uText = questionObj.options[selectedIndex];
+                let cText = questionObj.options[correctIndex];
+
+                const uMatch = uText.match(/^([A-Z])\)\s(.*)/); if (uMatch) { uLetter = uMatch[1]; uText = uMatch[2]; }
+                const cMatch = cText.match(/^([A-Z])\)\s(.*)/); if (cMatch) { cLetter = cMatch[1]; cText = cMatch[2]; }
+
+                htmlContent = `
+                    <div class="flex items-start gap-3 mb-5">
+                        <div class="mt-1"><svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
+                        <div class="w-full">
+                            <h3 class="font-black text-lg mb-4 text-red-800 uppercase tracking-wide text-sm">✕ Resposta Incorreta</h3>
+                            <div class="bg-white/80 p-4 rounded-lg border border-red-100 mb-3 shadow-sm">
+                                <span class="text-xs font-black text-red-800 uppercase block mb-1">Você marcou:</span>
+                                <span class="text-gray-700 font-medium text-sm leading-relaxed">[${uLetter}] ${uText.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')}</span>
+                            </div>
+                            <div class="bg-white/80 p-4 rounded-lg border border-emerald-100 shadow-sm">
+                                <span class="text-xs font-black text-emerald-800 uppercase block mb-1">Resposta Correta:</span>
+                                <span class="text-gray-700 font-medium text-sm leading-relaxed">[${cLetter}] ${cText.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pt-4 border-t border-red-200/60 pl-9">
+                        <h4 class="font-black text-red-900 mb-2 flex items-center gap-1 uppercase tracking-wide text-xs">💡 Entenda</h4>
+                        <p class="text-red-900 leading-relaxed text-sm font-medium">${formatJustification}</p>
+                    </div>`;
+            }
+            containerEl.innerHTML = htmlContent;
+        }
+
+        nextBtnEl.onclick = () => {
+            currentSequencePos++;
+            if (currentSequencePos < activeQuizSequence.length) { loadQuestion(); } 
+            else { showResults(); }
+        };
+
+        function showResults() {
+            hideAllScreens();
+            resultAreaEl.classList.remove('hidden');
+            const total = activeQuizSequence.length;
+            const incorretos = total - sessionScore;
+            const percentualRaw = (sessionScore / total) * 100;
+            const percentFormatado = percentualRaw % 1 === 0 ? percentualRaw : percentualRaw.toFixed(1).replace('.', ',');
+            
+            document.getElementById('score-correct').innerText = sessionScore;
+            document.getElementById('score-incorrect').innerText = incorretos;
+            document.getElementById('score-percent').innerText = `${percentFormatado}%`;
+            document.getElementById('score-total').innerText = `Total: ${total} questões respondidas`;
+            
+            let msg = ""; let iconClass = ""; let iconSvg = "";
+            if(percentualRaw === 100) {
+                msg = "Excelente desempenho! Você demonstrou domínio do conteúdo.";
+                iconClass = "bg-emerald-100 text-emerald-600";
+                iconSvg = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>`;
+            } else if(percentualRaw >= 80) {
+                msg = "Muito bom desempenho! Continue revisando para consolidar o conhecimento.";
+                iconClass = "bg-indigo-100 text-indigo-600";
+                iconSvg = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"></path>`;
+            } else if(percentualRaw >= 60) {
+                msg = "Bom desempenho. Revise as questões que errou para fortalecer o aprendizado.";
+                iconClass = "bg-amber-100 text-amber-600";
+                iconSvg = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>`;
+            } else {
+                msg = "Vale a pena revisar o conteúdo e tentar novamente.";
+                iconClass = "bg-red-100 text-red-600";
+                iconSvg = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>`;
+            }
+            document.getElementById('score-message').innerText = msg;
+            const resIcon = document.getElementById('result-icon');
+            resIcon.className = `w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 shadow-md ${iconClass}`;
+            resIcon.innerHTML = `<svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">${iconSvg}</svg>`;
+        }
+
+        document.getElementById('restart-btn').onclick = () => { showQuizModesMenu(); };
+
+        // ==========================================
+        // DASHBOARD DE REVISÃO DE ERROS
+        // ==========================================
+        function showErrorDashboard() {
+            hideAllScreens();
+            errorDashboardAreaEl.classList.remove('hidden');
+            renderErrorList('all');
+        }
+
+        function renderErrorList(filterUnit, eventObj) {
+            const listContainer = document.getElementById('error-list-container');
+            listContainer.innerHTML = '';
+
+            let totalErrors = 0; let pending = 0; let corrected = 0;
+
+            // Filtros visuais com compatibilidade Multi-Browser
+            document.querySelectorAll('.dash-filter-btn').forEach(btn => {
+                btn.classList.remove('bg-gray-800', 'text-white');
+                btn.classList.add('bg-gray-100', 'text-gray-600');
+            });
+            
+            if (eventObj && eventObj.currentTarget) {
+                eventObj.currentTarget.classList.add('bg-gray-800', 'text-white');
+            } else {
+                document.querySelector('.dash-filter-btn').classList.add('bg-gray-800', 'text-white');
+            }
+
+            const errorKeys = Object.keys(appData.errors);
+            
+            if(errorKeys.length === 0) {
+                listContainer.innerHTML = `<div class="text-center p-10 text-gray-500"><svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><p class="text-lg font-bold">Você ainda não possui questões para revisar.</p><p class="text-sm mt-2">Faça o simulado para gerar seu histórico.</p></div>`;
+            }
+
+            errorKeys.forEach(qIdxStr => {
+                const qIdx = parseInt(qIdxStr);
+                const errData = appData.errors[qIdx];
+                const qObj = quizData[qIdx];
+
+                totalErrors++;
+                if(errData.status === 'corrected') corrected++; else pending++;
+
+                // Aplica filtro de Unidade
+                if (filterUnit !== 'all' && errData.unit !== filterUnit) return;
+
+                let statusBadge = '';
+                if(errData.status === 'pending') statusBadge = '<span class="badge-status-pending text-xs font-black px-2.5 py-1 rounded-md uppercase">❌ Não Revisada</span>';
+                else if(errData.status === 'reviewing') statusBadge = '<span class="badge-status-reviewing text-xs font-black px-2.5 py-1 rounded-md uppercase">🔄 Em Revisão</span>';
+                else if(errData.status === 'corrected') statusBadge = '<span class="badge-status-corrected text-xs font-black px-2.5 py-1 rounded-md uppercase">✅ Corrigida</span>';
+
+                let unitDisplay = errData.unit ? `Unidade ${errData.unit}` : 'Sem Unidade';
+
+                const card = document.createElement('div');
+                card.className = `bg-white p-5 rounded-xl shadow-sm flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between border-l-4 ${errData.status === 'corrected' ? 'border-emerald-400' : (errData.status === 'reviewing' ? 'border-amber-400' : 'border-red-400')}`;
+                
+                card.innerHTML = `
+                    <div class="flex-1">
+                        <div class="flex flex-wrap gap-2 mb-3">
+                            ${statusBadge}
+                            <span class="bg-indigo-50 text-indigo-800 text-xs font-bold px-2 py-1 rounded border border-indigo-100">${unitDisplay}</span>
+                            <span class="bg-gray-100 text-gray-600 text-xs font-bold px-2 py-1 rounded border border-gray-200 truncate max-w-[200px]">${errData.theme}</span>
+                        </div>
+                        <p class="text-gray-800 font-medium text-sm md:text-base line-clamp-2">${qObj.question}</p>
+                    </div>
+                    <button onclick="openDetailedError(${qIdx})" class="w-full sm:w-auto shrink-0 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold py-2 px-5 rounded-lg transition-colors border border-gray-300 flex items-center justify-center gap-2">
+                        📖 Revisar Questão
+                    </button>
+                `;
+                listContainer.appendChild(card);
+            });
+
+            // Atualiza Top Dashboard Stats
+            document.getElementById('dash-stat-total').innerText = appData.totalAnswered;
+            document.getElementById('dash-stat-errors').innerText = totalErrors;
+            document.getElementById('dash-stat-pending').innerText = pending;
+            document.getElementById('dash-stat-corrected').innerText = corrected;
+        }
+
+        // ==========================================
+        // TELA DE DETALHE DE ERRO E MODO REFAZER
+        // ==========================================
+        let reviewingQuestionIndex = null;
+
+        function openDetailedError(qIndex) {
+            reviewingQuestionIndex = qIndex;
+            const errData = appData.errors[qIndex];
+            
+            // Atualiza status se estava pendente
+            if (errData.status === 'pending') {
+                errData.status = 'reviewing';
+                saveAppData();
+            }
+
+            hideAllScreens();
+            errorDetailAreaEl.classList.remove('hidden');
+            renderDetailedStaticView();
+        }
+
+        function renderDetailedStaticView() {
+            const qIndex = reviewingQuestionIndex;
+            const errData = appData.errors[qIndex];
+            const qObj = quizData[qIndex];
+
+            // Renderiza Header do Detalhe
+            document.getElementById('detail-attempts').innerText = errData.attempts;
+            document.getElementById('detail-wrong').innerText = errData.wrong;
+            document.getElementById('detail-correct').innerText = errData.correct;
+            
+            let sBadge = document.getElementById('detail-status-badge');
+            sBadge.className = "text-xs font-bold px-2.5 py-1 rounded-md uppercase tracking-wide";
+            if(errData.status === 'pending') { sBadge.innerText = '❌ Não Revisada'; sBadge.classList.add('badge-status-pending'); }
+            else if(errData.status === 'reviewing') { sBadge.innerText = '🔄 Em Revisão'; sBadge.classList.add('badge-status-reviewing'); }
+            else if(errData.status === 'corrected') { sBadge.innerText = '✅ Corrigida'; sBadge.classList.add('badge-status-corrected'); }
+
+            let uBadge = document.getElementById('detail-unit-badge');
+            if(errData.unit) { uBadge.innerText = `Unidade ${errData.unit}`; uBadge.classList.remove('hidden'); } 
+            else { uBadge.classList.add('hidden'); }
+
+            document.getElementById('detail-question-text').innerText = qObj.question;
+
+            // Renderiza as caixas estáticas
+            let uLetter = String.fromCharCode(65 + errData.lastChosen);
+            let cLetter = String.fromCharCode(65 + qObj.answer);
+            let uText = qObj.options[errData.lastChosen];
+            let cText = qObj.options[qObj.answer];
+
+            const uMatch = uText.match(/^([A-Z])\)\s(.*)/); if (uMatch) { uLetter = uMatch[1]; uText = uMatch[2]; }
+            const cMatch = cText.match(/^([A-Z])\)\s(.*)/); if (cMatch) { cLetter = cMatch[1]; cText = cMatch[2]; }
+
+            document.getElementById('detail-user-answer').innerHTML = `[${uLetter}] ${uText.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')}`;
+            document.getElementById('detail-correct-answer').innerHTML = `[${cLetter}] ${cText.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')}`;
+            document.getElementById('detail-justification').innerHTML = qObj.justification.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+
+            // Mostra tela estática, esconde a interativa
+            document.getElementById('detail-static-view').classList.remove('hidden');
+            document.getElementById('detail-interactive-view').classList.add('hidden');
+        }
+
+        function startRefazer() {
+            refazerAnswered = false; // Reseta a trava contra cliques múltiplos
+            document.getElementById('detail-static-view').classList.add('hidden');
+            const interView = document.getElementById('detail-interactive-view');
+            interView.classList.remove('hidden');
+            
+            const optsContainer = document.getElementById('refazer-options-container');
+            const feedBox = document.getElementById('refazer-feedback-box');
+            optsContainer.innerHTML = '';
+            feedBox.classList.add('hidden');
+            feedBox.innerHTML = '';
+
+            const qObj = quizData[reviewingQuestionIndex];
+
+            qObj.options.forEach((option, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn w-full text-left bg-white border-2 border-gray-200 shadow-sm hover:border-indigo-400 hover:bg-indigo-50 rounded-xl p-4 text-gray-700 font-medium focus:outline-none transition-all duration-200';
+                
+                let optLetter = String.fromCharCode(65 + index);
+                let optText = option;
+                const match = option.match(/^([A-Z])\)\s(.*)/);
+                if (match) { optLetter = match[1]; optText = match[2]; }
+
+                btn.innerHTML = `<span class="flex items-start gap-4">
+                                    <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-lg bg-gray-100 text-gray-500 font-bold text-sm border border-gray-300 mt-0.5">${optLetter}</span>
+                                    <span class="leading-relaxed mt-1">${optText.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')}</span>
+                                 </span>`;
+                
+                btn.onclick = () => confirmRefazerOption(index, btn);
+                optsContainer.appendChild(btn);
+            });
+        }
+
+        function confirmRefazerOption(selectedIndex, selectedBtn) {
+            if (refazerAnswered) return; // Impede múltiplos cliques e inflação de tentativas
+            refazerAnswered = true;
+
+            const qIndex = reviewingQuestionIndex;
+            const qObj = quizData[qIndex];
+            const errData = appData.errors[qIndex];
+            const isCorrect = selectedIndex === qObj.answer;
+            const allButtons = document.getElementById('refazer-options-container').querySelectorAll('button');
+
+            // --- REGISTRO PERSISTENTE (REFAZER) ---
+            errData.attempts++;
+            errData.lastChosen = selectedIndex;
+
+            if (!appData.history[qIndex]) {
+                appData.history[qIndex] = { unit: qObj.unit || null, theme: qObj.theme || 'Não especificado', isCorrect: false };
+            }
+            appData.history[qIndex].isCorrect = isCorrect;
+            
+            if (isCorrect) {
+                errData.correct++;
+                errData.status = 'corrected';
+                selectedBtn.classList.add('correct');
+            } else {
+                errData.wrong++;
+                errData.status = 'pending'; // Se errou, volta pra pendente
+                selectedBtn.classList.add('incorrect');
+                allButtons[qObj.answer].classList.add('correct');
+            }
+            saveAppData();
+            // --------------------------------------
+
+            // Desabilita botões
+            allButtons.forEach(btn => {
+                btn.disabled = true;
+                btn.classList.add('opacity-70', 'cursor-not-allowed');
+                btn.classList.remove('hover:border-indigo-400', 'hover:bg-indigo-50', 'shadow-sm');
+            });
+
+            const feedBox = document.getElementById('refazer-feedback-box');
+            showFeedback(isCorrect, qObj, selectedIndex, feedBox);
+            
+            // Adiciona botão para atualizar a view superior e voltar
+            const backBtnHTML = `
+                <div class="mt-6 flex justify-end">
+                    <button onclick="renderDetailedStaticView()" class="bg-gray-800 hover:bg-gray-900 text-white font-bold py-3 px-8 rounded-xl transition-all shadow-lg flex items-center gap-2">
+                        Ver Resultado Analítico e Voltar &uarr;
+                    </button>
+                </div>
+            `;
+            feedBox.insertAdjacentHTML('beforeend', backBtnHTML);
+
+            // Atualiza estatísticas do header instantaneamente
+            document.getElementById('detail-attempts').innerText = errData.attempts;
+            document.getElementById('detail-wrong').innerText = errData.wrong;
+            document.getElementById('detail-correct').innerText = errData.correct;
+            
+            let sBadge = document.getElementById('detail-status-badge');
+            sBadge.className = "text-xs font-bold px-2.5 py-1 rounded-md uppercase tracking-wide";
+            if(errData.status === 'pending') { sBadge.innerText = '❌ Não Revisada'; sBadge.classList.add('badge-status-pending'); }
+            else if(errData.status === 'corrected') { sBadge.innerText = '✅ Corrigida'; sBadge.classList.add('badge-status-corrected'); }
+        }
+
+        // ==========================================
+        // ==========================================
+        function showPerformance() {
+            hideAllScreens();
+            performanceAreaEl.classList.remove('hidden');
+            renderPerformanceData();
+        }
+
+        function renderPerformanceData() {
+            const container = document.getElementById('perf-content-container');
+            const historyKeys = Object.keys(appData.history);
+            const totalQuestions = quizData.length;
+            const answeredCount = historyKeys.length;
+            const correctCount = Object.values(appData.history).filter(h => h.isCorrect).length;
+            const wrongCount = answeredCount - correctCount;
+            const notAnsweredCount = totalQuestions - answeredCount;
+            const generalPercent = answeredCount === 0 ? 0 : Math.round((correctCount / answeredCount) * 100);
+            const globalProgressPct = Math.round((answeredCount / totalQuestions) * 100);
+
+            document.getElementById('perf-global-percent').innerText = `${generalPercent}%`;
+
+            if (answeredCount === 0) {
+                container.innerHTML = `
+                    <div class="text-center p-10 text-gray-500">
+                        <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                        <p class="text-lg font-bold">Sem dados suficientes.</p>
+                        <p class="text-sm mt-2">Faça o simulado para que o sistema possa analisar seu desempenho real.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Agrupamento de Dados (Unidades e Temas)
+            let units = {};
+            let themes = {};
+            let dbUnits = {};
+
+            // Calculando total do banco por unidade para mostrar o progresso real
+            quizData.forEach((q, i) => {
+                let u = q.unit || 'Outros';
+                if(!dbUnits[u]) dbUnits[u] = { total: 0, answered: 0 };
+                dbUnits[u].total++;
+                if(appData.history[i]) dbUnits[u].answered++;
+            });
+
+            historyKeys.forEach(k => {
+                let h = appData.history[k];
+                // Processar Unidade
+                let uKey = h.unit ? h.unit : 'Outros';
+                if (!units[uKey]) units[uKey] = { ans: 0, cor: 0 };
+                units[uKey].ans++;
+                if (h.isCorrect) units[uKey].cor++;
+
+                // Processar Tema
+                let tKey = h.theme;
+                if (!themes[tKey]) themes[tKey] = { ans: 0, cor: 0, unit: h.unit };
+                themes[tKey].ans++;
+                if (h.isCorrect) themes[tKey].cor++;
+            });
+
+            // Geração do HTML (Progresso da Disciplina)
+            let html = `
+                <div class="bg-indigo-600 text-white p-6 rounded-2xl shadow-md mb-2 flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div>
+                        <h3 class="font-black text-xl flex items-center gap-2">
+                            <svg class="w-6 h-6 text-indigo-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg> 
+                            Progresso da Disciplina
+                        </h3>
+                        <p class="text-indigo-100 text-sm mt-1">Você já estudou <b>${globalProgressPct}%</b> do banco de questões (${answeredCount} de ${totalQuestions}).</p>
+                    </div>
+                    <div class="flex gap-4 text-sm font-bold bg-indigo-800/40 p-3 px-5 rounded-xl border border-indigo-500/50">
+                        ${Object.keys(dbUnits).filter(u => u !== 'Outros').sort().map(u => `
+                            <div class="flex flex-col items-center">
+                                <span class="text-indigo-200 text-[10px] uppercase tracking-wide">Unidade ${u}</span>
+                                <span class="text-white text-lg">${Math.round((dbUnits[u].answered/dbUnits[u].total)*100)}%</span>
+                            </div>
+                        `).join('<div class="w-px bg-indigo-500/50 mx-1"></div>')}
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200 text-center">
+                        <p class="text-gray-500 text-xs font-bold uppercase">Respondidas</p>
+                        <p class="text-2xl font-black text-gray-800 mt-1">${answeredCount}/${totalQuestions}</p>
+                    </div>
+                    <div class="bg-emerald-50 p-4 rounded-xl shadow-sm border border-emerald-100 text-center">
+                        <p class="text-emerald-700 text-xs font-bold uppercase">Acertos</p>
+                        <p class="text-2xl font-black text-emerald-600 mt-1">${correctCount}</p>
+                    </div>
+                    <div class="bg-red-50 p-4 rounded-xl shadow-sm border border-red-100 text-center">
+                        <p class="text-red-700 text-xs font-bold uppercase">Erros</p>
+                        <p class="text-2xl font-black text-red-600 mt-1">${wrongCount}</p>
+                    </div>
+                    <div class="bg-gray-100 p-4 rounded-xl shadow-sm border border-gray-200 text-center">
+                        <p class="text-gray-500 text-xs font-bold uppercase">Não Respondidas</p>
+                        <p class="text-2xl font-black text-gray-600 mt-1">${notAnsweredCount}</p>
+                    </div>
+                </div>
+            `;
+
+            // Identificando Recomendações
+            let bestUnit = null; let bestUnitPct = -1;
+            let worstTheme = null; let worstThemePct = 101; let worstThemeObj = null;
+
+            for (let u in units) {
+                let pct = (units[u].cor / units[u].ans) * 100;
+                if (pct > bestUnitPct && u !== 'Outros') { bestUnitPct = pct; bestUnit = u; }
+            }
+
+            for (let t in themes) {
+                let pct = (themes[t].cor / themes[t].ans) * 100;
+                if (pct < worstThemePct) { worstThemePct = pct; worstTheme = t; worstThemeObj = themes[t]; }
+            }
+
+            // Geração do HTML (Recomendações)
+            if (worstTheme) {
+                let btnAction = '';
+                if (wrongCount > 0 && worstThemePct < 60) {
+                    btnAction = `<button onclick="startQuiz('theme', '${worstTheme}')" class="mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 px-6 rounded-lg text-sm transition-colors shadow-md flex items-center gap-2">📝 Praticar este tema novamente</button>`;
+                } else if (wrongCount > 0) {
+                    btnAction = `<button onclick="showErrorDashboard()" class="mt-4 bg-amber-500 hover:bg-amber-600 text-white font-bold py-2.5 px-6 rounded-lg text-sm transition-colors shadow-md flex items-center gap-2">🔄 Revisar meus erros</button>`;
+                }
+
+                html += `
+                    <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-6 shadow-sm mt-2">
+                        <h4 class="font-black text-indigo-800 flex items-center gap-2 uppercase tracking-wide text-sm mb-3">🎯 Recomendação de Estudo</h4>
+                        <p class="text-indigo-900 text-sm mb-1">${bestUnit ? `Seu melhor desempenho está na <b>Unidade ${bestUnit}</b>.` : ''}</p>
+                        <p class="text-indigo-900 text-sm">Seu principal ponto de atenção no momento é o tema: <b>${worstTheme}</b>.</p>
+                        ${btnAction}
+                    </div>
+                `;
+            }
+
+            // Geração do HTML (Unidades)
+            html += `
+                <div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002 2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                        Desempenho por Unidade
+                    </h3>
+                    <div class="grid sm:grid-cols-3 gap-4">
+            `;
+            
+            const unitIcons = {
+                1: '📘', 2: '📗', 3: '📙', 'Outros': '📓'
+            };
+
+            for (let u in units) {
+                let pct = Math.round((units[u].cor / units[u].ans) * 100);
+                html += `
+                    <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                        <h4 class="font-black text-gray-800 mb-3 flex items-center gap-2">${unitIcons[u] || '📓'} ${u === 'Outros' ? 'Outros Temas' : `Unidade ${u}`}</h4>
+                        <div class="flex justify-between text-sm text-gray-500 mb-1"><span>Respondidas:</span> <span class="font-bold text-gray-800">${units[u].ans}</span></div>
+                        <div class="flex justify-between text-sm text-emerald-600 mb-1"><span>Acertos:</span> <span class="font-bold">${units[u].cor}</span></div>
+                        <div class="flex justify-between text-sm text-red-600 mb-3"><span>Erros:</span> <span class="font-bold">${units[u].ans - units[u].cor}</span></div>
+                        <div class="pt-3 border-t border-gray-100 flex justify-between items-center">
+                            <span class="text-xs font-bold uppercase text-gray-400">Aproveitamento</span>
+                            <span class="font-black text-lg ${pct >= 80 ? 'text-emerald-500' : (pct >= 60 ? 'text-amber-500' : 'text-red-500')}">${pct}%</span>
+                        </div>
+                    </div>
+                `;
+            }
+            html += `</div></div>`;
+
+            // Geração do HTML (Temas)
+            html += `
+                <div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7-7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg>
+                        Desempenho por Tema
+                    </h3>
+                    <div class="space-y-3 pb-8">
+            `;
+
+            // Ordenando temas para exibição
+            let sortedThemes = Object.keys(themes).sort((a, b) => {
+                let pctA = (themes[a].cor / themes[a].ans);
+                let pctB = (themes[b].cor / themes[b].ans);
+                return pctB - pctA; // decrescente
+            });
+
+            sortedThemes.forEach(t => {
+                let tData = themes[t];
+                let pct = Math.round((tData.cor / tData.ans) * 100);
+                
+                let statusIcon = '🔴';
+                let statusText = 'PRECISA REVISAR';
+                let statusClass = 'text-red-600 bg-red-50 border-red-200';
+                let statusPhrase = 'Recomendamos revisar este tema no Guia de Estudo.';
+                
+                if (pct >= 80) {
+                    statusIcon = '🟢'; statusText = 'DOMINADO'; statusClass = 'text-emerald-600 bg-emerald-50 border-emerald-200';
+                    statusPhrase = 'Bom desempenho neste tema.';
+                } else if (pct >= 60) {
+                    statusIcon = '🟡'; statusText = 'ATENÇÃO'; statusClass = 'text-amber-600 bg-amber-50 border-amber-200';
+                    statusPhrase = 'Continue praticando este tema.';
+                }
+
+                let warningLabel = tData.ans <= 2 ? `<span class="text-[10px] text-gray-400 font-medium ml-2 block sm:inline mt-1 sm:mt-0">(Baseado em ${tData.ans} resposta${tData.ans > 1 ? 's' : ''})</span>` : '';
+
+                html += `
+                    <div class="bg-white p-4 md:p-5 rounded-xl border border-gray-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div class="flex-1">
+                            <div class="flex justify-between md:justify-start items-center gap-3 mb-1">
+                                <span class="text-xs font-bold text-gray-400 uppercase tracking-wide">${tData.unit ? `Unidade ${tData.unit}` : 'Tema'}</span>
+                                <div class="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wide flex items-center gap-1 ${statusClass} md:hidden">
+                                    ${statusIcon} ${statusText}
+                                </div>
+                            </div>
+                            <h4 class="font-bold text-gray-800 text-base leading-tight mb-2">${t} ${warningLabel}</h4>
+                            <p class="text-sm text-gray-500 font-medium">${statusPhrase}</p>
+                            
+                            <div class="mt-3 flex flex-wrap gap-2">
+                                <button onclick="startQuiz('theme', '${t}')" class="text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-100 py-1.5 px-3 rounded-lg transition-colors flex items-center gap-1">📝 Praticar</button>
+                                ${(tData.unit && studyGuideData.some(g => g.unit == tData.unit)) ? `<button onclick="openStudyGuide(${tData.unit - 1})" class="text-xs font-bold bg-gray-50 text-gray-600 border border-gray-200 hover:bg-gray-100 py-1.5 px-3 rounded-lg transition-colors flex items-center gap-1">📚 Revisar conteúdo</button>` : ''}
+                            </div>
+                        </div>
+                        <div class="hidden md:flex items-center gap-4 shrink-0">
+                            <div class="text-right">
+                                <p class="text-xs font-bold text-gray-500 uppercase">Aproveitamento</p>
+                                <p class="font-black text-2xl ${statusClass.split(' ')[0]}">${pct}%</p>
+                            </div>
+                            <div class="px-3 py-1.5 rounded-lg border text-xs font-black uppercase tracking-wide flex flex-col items-center justify-center gap-1 w-36 ${statusClass}">
+                                <span class="text-lg">${statusIcon}</span> ${statusText}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `</div></div>`;
+            container.innerHTML = html;
+        }
+
+        // ==========================================
+        // LÓGICA DO FEEDBACK
+        // ==========================================
+        let selectedFeedbackRating = null;
+
+        function openFeedbackModal() {
+            document.getElementById('feedback-modal').classList.remove('hidden');
+            document.getElementById('feedback-form-content').classList.remove('hidden');
+            document.getElementById('feedback-success-content').classList.add('hidden');
+            
+            // Resetar formulário sempre que abrir
+            selectedFeedbackRating = null;
+            document.getElementById('feedback-textarea').value = '';
+            document.getElementById('feedback-name').value = '';
+            document.querySelectorAll('.feedback-rating-btn').forEach(btn => {
+                btn.classList.remove('border-indigo-500', 'bg-indigo-50', 'ring-2', 'ring-indigo-200', 'text-indigo-800');
+                btn.classList.add('border-gray-200', 'bg-gray-50', 'text-gray-700');
+            });
+        }
+
+        function closeFeedbackModal() {
+            document.getElementById('feedback-modal').classList.add('hidden');
+        }
+
+        function selectFeedbackRating(element, rating) {
+            selectedFeedbackRating = rating;
+            
+            // Reset visual
+            document.querySelectorAll('.feedback-rating-btn').forEach(btn => {
+                btn.classList.remove('border-indigo-500', 'bg-indigo-50', 'ring-2', 'ring-indigo-200', 'text-indigo-800');
+                btn.classList.add('border-gray-200', 'bg-gray-50', 'text-gray-700');
+            });
+            
+            // Aplicar estilo de selecionado (reutilizando cores do projeto)
+            element.classList.remove('border-gray-200', 'bg-gray-50', 'text-gray-700');
+            element.classList.add('border-indigo-500', 'bg-indigo-50', 'ring-2', 'ring-indigo-200', 'text-indigo-800');
+        }
+
+        function submitFeedback() {
+            // Conforme Regra 5: Como o envio automático de HTML customizado para o Google Forms
+            // pode ser bloqueado pelas restrições do navegador (CORS), abrimos o formulário em nova aba.
+            // O usuário passa pela experiência UI limpa do seu App e finaliza o envio com segurança lá.
+            if (FEEDBACK_FORM_URL && FEEDBACK_FORM_URL !== "COLE_AQUI_O_LINK_DO_GOOGLE_FORMS") {
+                window.open(FEEDBACK_FORM_URL, '_blank');
+            }
+
+            // Mostra a tela de sucesso (Regra 6)
+            document.getElementById('feedback-form-content').classList.add('hidden');
+            document.getElementById('feedback-success-content').classList.remove('hidden');
+        }
+
+        // INIT
+        window.onload = () => {
+            loadAppData();
+            showHome();
+        };
+    </script>
+</body>
+</html>
