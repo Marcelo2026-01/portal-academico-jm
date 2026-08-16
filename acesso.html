@@ -1,131 +1,156 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Portal Acadêmico JM - Simulador de Estudos</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f9fafb; scroll-behavior: smooth; }
-        .hero-bg { background: linear-gradient(135deg, #be185d 0%, #831843 100%); }
-        .mockup-shadow { box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #f9fafb; 
+        }
+        .hero-bg { 
+            background: linear-gradient(135deg, #be185d 0%, #831843 100%); 
+        }
+        .mockup-shadow { 
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); 
+        }
+        /* Garantir que imagens e svgs nunca causem overflow horizontal */
+        img, svg {
+            max-width: 100%;
+            height: auto;
+        }
     </style>
 </head>
-<body class="text-gray-800 antialiased relative">
+<body class="text-gray-800 antialiased relative overflow-x-hidden min-h-[100dvh] flex flex-col w-full selection:bg-pink-300 selection:text-pink-900">
 
     <!-- CABEÇALHO HERO -->
-    <header class="hero-bg text-white pt-16 pb-24 px-6 text-center rounded-b-[3rem] relative overflow-hidden">
-        <div class="max-w-3xl mx-auto relative z-10">
-            <span class="bg-white/20 text-pink-50 text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider mb-6 inline-block border border-white/30">
+    <header class="hero-bg text-white pt-[calc(4rem+env(safe-area-inset-top))] pb-20 md:pb-24 px-5 md:px-6 text-center rounded-b-[2.5rem] md:rounded-b-[3rem] relative overflow-hidden w-full shrink-0">
+        <div class="max-w-3xl mx-auto relative z-10 w-full">
+            <span class="bg-white/20 text-pink-50 text-[clamp(0.7rem,2vw,0.75rem)] font-bold px-4 py-2 rounded-full uppercase tracking-wider mb-6 md:mb-8 inline-block border border-white/30 backdrop-blur-sm">
                 Material de Apoio da Turma
             </span>
-            <h1 class="text-4xl sm:text-5xl font-black mb-6 leading-tight tracking-tight">
+            <h1 class="text-[clamp(2.25rem,7vw,3.5rem)] font-black mb-5 md:mb-6 leading-tight tracking-tight break-words">
                 Portal Acadêmico <span class="text-pink-200">JM</span>
             </h1>
-            <p class="text-lg sm:text-xl text-pink-100 mb-10 font-light max-w-2xl mx-auto">
+            <p class="text-[clamp(1rem,3.5vw,1.25rem)] text-pink-100 mb-8 md:mb-10 font-light max-w-2xl mx-auto leading-relaxed px-2 md:px-0">
                 Desenvolvi este sistema para facilitar nossas revisões para as provas da faculdade. Ele mastiga a teoria das disciplinas, corrige as questões na hora e mostra exatamente onde a gente precisa focar.
             </p>
-            <a href="#acesso" class="bg-white text-pink-700 hover:bg-gray-50 font-black text-lg py-4 px-8 rounded-full shadow-xl transition-transform transform hover:scale-105 inline-block">
+            <a href="#acesso" class="bg-white text-pink-700 hover:bg-gray-50 font-black text-[clamp(1rem,3vw,1.125rem)] py-4 px-8 rounded-full shadow-xl transition-transform transform hover:scale-105 w-full sm:w-auto inline-flex justify-center items-center active:scale-95 min-h-[56px]">
                 Ver como acessar &rarr;
             </a>
         </div>
     </header>
 
     <!-- SEÇÃO DE RECURSOS (OS PRINTS DO SISTEMA) -->
-    <section class="py-20 px-6 max-w-6xl mx-auto">
-        <div class="text-center mb-16">
-            <h2 class="text-3xl font-black text-gray-800 mb-4">Como a plataforma funciona?</h2>
-            <p class="text-gray-500 text-lg">Tudo organizado direto no navegador do seu celular ou PC.</p>
+    <section class="py-16 md:py-20 px-5 md:px-6 max-w-6xl mx-auto w-full flex-grow">
+        <div class="text-center mb-12 md:mb-16">
+            <h2 class="text-[clamp(1.75rem,5vw,2.25rem)] font-black text-gray-800 mb-4 leading-tight">Como a plataforma funciona?</h2>
+            <p class="text-gray-500 text-[clamp(1rem,3vw,1.125rem)] max-w-lg mx-auto">Tudo organizado direto no navegador do seu celular ou PC.</p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-12 w-full">
             <!-- Funcionalidade 1 -->
-            <div class="flex flex-col items-center text-center">
-                <div class="bg-white p-2 rounded-[2rem] mockup-shadow mb-6 border border-gray-100 w-64 h-auto overflow-hidden">
-                    <img src="print-menu.jpeg" alt="Menu do Sistema" class="w-full h-auto rounded-[1.5rem] border border-gray-100">
+            <div class="flex flex-col items-center text-center w-full h-full">
+                <div class="bg-white p-2 rounded-[2rem] mockup-shadow mb-6 border border-gray-100 w-full max-w-[16rem] h-auto overflow-hidden mx-auto transition-transform hover:-translate-y-1">
+                    <img src="print-menu.jpeg" alt="Menu do Sistema" class="w-full h-auto rounded-[1.5rem] border border-gray-100 object-cover" loading="lazy" decoding="async">
                 </div>
-                <h3 class="text-xl font-bold text-gray-800 mb-2">Foco no que importa</h3>
-                <p class="text-gray-600 text-sm leading-relaxed">Acesse guias de estudo resumidos e um banco de questões selecionadas e atualizadas para a nossa disciplina atual.</p>
+                <h3 class="text-[clamp(1.125rem,3vw,1.25rem)] font-bold text-gray-800 mb-3 px-2">Foco no que importa</h3>
+                <p class="text-gray-600 text-[clamp(0.875rem,2.5vw,0.95rem)] leading-relaxed max-w-[18rem] md:max-w-none flex-grow">Acesse guias de estudo resumidos e um banco de questões selecionadas e atualizadas para a nossa disciplina atual.</p>
             </div>
 
             <!-- Funcionalidade 2 -->
-            <div class="flex flex-col items-center text-center">
-                <div class="bg-white p-2 rounded-[2rem] mockup-shadow mb-6 border border-gray-100 w-64 h-auto overflow-hidden">
-                    <img src="print-correcao.jpeg" alt="Correção Inteligente" class="w-full h-auto rounded-[1.5rem] border border-gray-100">
+            <div class="flex flex-col items-center text-center w-full h-full">
+                <div class="bg-white p-2 rounded-[2rem] mockup-shadow mb-6 border border-gray-100 w-full max-w-[16rem] h-auto overflow-hidden mx-auto transition-transform hover:-translate-y-1">
+                    <img src="print-correcao.jpeg" alt="Correção Inteligente" class="w-full h-auto rounded-[1.5rem] border border-gray-100 object-cover" loading="lazy" decoding="async">
                 </div>
-                <h3 class="text-xl font-bold text-gray-800 mb-2">Correção Explicada</h3>
-                <p class="text-gray-600 text-sm leading-relaxed">Se errar uma questão, o sistema não dá apenas o gabarito. Ele te explica o conceito na mesma hora para você não errar mais.</p>
+                <h3 class="text-[clamp(1.125rem,3vw,1.25rem)] font-bold text-gray-800 mb-3 px-2">Correção Explicada</h3>
+                <p class="text-gray-600 text-[clamp(0.875rem,2.5vw,0.95rem)] leading-relaxed max-w-[18rem] md:max-w-none flex-grow">Se errar uma questão, o sistema não dá apenas o gabarito. Ele te explica o conceito na mesma hora para você não errar mais.</p>
             </div>
 
             <!-- Funcionalidade 3 -->
-            <div class="flex flex-col items-center text-center">
-                <div class="bg-white p-2 rounded-[2rem] mockup-shadow mb-6 border border-gray-100 w-64 h-auto overflow-hidden">
-                    <img src="print-desempenho.jpeg" alt="Gráfico de Desempenho" class="w-full h-auto rounded-[1.5rem] border border-gray-100">
+            <div class="flex flex-col items-center text-center w-full h-full md:col-span-2 lg:col-span-1 md:max-w-sm md:mx-auto lg:max-w-none">
+                <div class="bg-white p-2 rounded-[2rem] mockup-shadow mb-6 border border-gray-100 w-full max-w-[16rem] h-auto overflow-hidden mx-auto transition-transform hover:-translate-y-1">
+                    <img src="print-desempenho.jpeg" alt="Gráfico de Desempenho" class="w-full h-auto rounded-[1.5rem] border border-gray-100 object-cover" loading="lazy" decoding="async">
                 </div>
-                <h3 class="text-xl font-bold text-gray-800 mb-2">Seu Desempenho</h3>
-                <p class="text-gray-600 text-sm leading-relaxed">Acompanhe seus acertos e veja gráficos automáticos que recomendam qual unidade você precisa revisar mais.</p>
+                <h3 class="text-[clamp(1.125rem,3vw,1.25rem)] font-bold text-gray-800 mb-3 px-2">Seu Desempenho</h3>
+                <p class="text-gray-600 text-[clamp(0.875rem,2.5vw,0.95rem)] leading-relaxed max-w-[18rem] md:max-w-none flex-grow">Acompanhe seus acertos e veja gráficos automáticos que recomendam qual unidade você precisa revisar mais.</p>
             </div>
         </div>
     </section>
 
     <!-- SEÇÃO DE PROVA SOCIAL (A SUA NOTA) -->
-    <section class="py-16 px-6 bg-pink-50 border-t border-b border-pink-100 text-center">
-        <div class="max-w-3xl mx-auto">
-            <h2 class="text-2xl sm:text-3xl font-black text-gray-800 mb-4">A prova de que o método funciona 🎯</h2>
-            <p class="text-gray-600 mb-8 leading-relaxed text-sm sm:text-base">
+    <section class="py-16 md:py-20 px-5 md:px-6 bg-pink-50 border-t border-b border-pink-100 text-center w-full shrink-0">
+        <div class="max-w-3xl mx-auto w-full">
+            <h2 class="text-[clamp(1.5rem,4.5vw,2.25rem)] font-black text-gray-800 mb-4 px-2 leading-tight">A prova de que o método funciona 🎯</h2>
+            <p class="text-gray-600 mb-8 md:mb-10 leading-relaxed text-[clamp(0.875rem,3vw,1rem)] max-w-2xl mx-auto">
                 Eu estruturei os estudos da nossa última disciplina usando exatamente a mesma lógica de revisão de erros da plataforma. Dá uma olhada no resultado:
             </p>
             
-            <div class="bg-white p-2 rounded-2xl shadow-md border border-gray-200 inline-block w-full max-w-sm overflow-hidden mb-6">
-                <!-- NOMEIE A FOTO DA SUA NOTA COMO print-nota.jpeg NA PASTA -->
-                <img src="print-nota.jpeg" alt="Comprovante de Nota" class="w-full h-auto rounded-xl">
+            <div class="bg-white p-2 md:p-3 rounded-2xl md:rounded-[1.5rem] shadow-md border border-gray-200 inline-block w-full max-w-[18rem] md:max-w-sm overflow-hidden mb-6 md:mb-8 transition-transform hover:scale-[1.02]">
+                <img src="print-nota.jpeg" alt="Comprovante de Nota" class="w-full h-auto rounded-xl object-contain" loading="lazy" decoding="async">
             </div>
             
-            <p class="text-pink-800 font-bold text-sm">Se funcionou para mim, vai funcionar para você também!</p>
+            <p class="text-pink-800 font-bold text-[clamp(0.875rem,3vw,1rem)] px-4">Se funcionou para mim, vai funcionar para você também!</p>
         </div>
     </section>
 
     <!-- SEÇÃO DE ACESSO (SEM CARA DE VENDA) -->
-    <section id="acesso" class="bg-gray-900 py-20 px-6 text-center">
-        <div class="max-w-xl mx-auto bg-gray-800 border border-gray-700 p-10 rounded-3xl shadow-2xl">
-            <h2 class="text-2xl font-black text-white mb-2">Como usar o simulador?</h2>
-            <p class="text-gray-400 mb-8 text-sm sm:text-base leading-relaxed">
+    <section id="acesso" class="bg-gray-900 py-16 md:py-24 px-5 md:px-6 text-center w-full shrink-0">
+        <div class="max-w-xl mx-auto bg-gray-800 border border-gray-700 p-6 sm:p-8 md:p-12 rounded-[2rem] md:rounded-3xl shadow-2xl w-full">
+            <h2 class="text-[clamp(1.5rem,4vw,2rem)] font-black text-white mb-3 md:mb-4 leading-tight">Como usar o simulador?</h2>
+            <p class="text-gray-400 mb-8 md:mb-10 text-[clamp(0.85rem,2.5vw,1rem)] leading-relaxed">
                 Para manter o banco de dados online e a plataforma sem anúncios para a nossa turma, existe um custo de hospedagem. Para quem quiser acessar os simulados de cada disciplina, estamos dividindo esse valor.
             </p>
             
-            <!-- VALOR ATUALIZADO PARA 20,00 -->
-            <div class="text-4xl font-black text-pink-500 mb-2">
-                R$ 20,00<span class="text-xl text-gray-400 font-medium"> / ajuda de custo</span>
+            <div class="text-[clamp(2.25rem,7vw,3rem)] font-black text-pink-500 mb-2 leading-none break-words">
+                R$ 20,00<span class="text-[clamp(0.9rem,3vw,1.25rem)] text-gray-400 font-medium whitespace-nowrap"> / ajuda de custo</span>
             </div>
-            <p class="text-gray-500 text-xs mb-8 uppercase tracking-wide font-bold">Taxa única para liberar a disciplina atual</p>
+            <p class="text-gray-500 text-[clamp(0.65rem,2vw,0.75rem)] mb-8 md:mb-10 uppercase tracking-wide font-bold px-2 break-words">Taxa única para liberar a disciplina atual</p>
 
-            <ul class="text-left text-gray-300 space-y-3 mb-8 text-sm bg-gray-900/50 p-6 rounded-xl border border-gray-700/50">
-                <li class="flex items-center gap-2">📌 Conta individual com login e senha</li>
-                <li class="flex items-center gap-2">📌 Seu histórico de estudos fica salvo</li>
-                <li class="flex items-center gap-2">📌 Acesso liberado no celular e computador</li>
-                <li class="flex items-center gap-2">📌 Ajuda a manter a ferramenta no ar</li>
+            <ul class="text-left text-gray-300 space-y-4 mb-8 md:mb-10 text-[clamp(0.85rem,2.5vw,1rem)] bg-gray-900/50 p-5 md:p-7 rounded-2xl border border-gray-700/50 w-full">
+                <li class="flex items-start gap-3">
+                    <span class="shrink-0 mt-0.5" aria-hidden="true">📌</span>
+                    <span>Conta individual com login e senha</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <span class="shrink-0 mt-0.5" aria-hidden="true">📌</span>
+                    <span>Seu histórico de estudos fica salvo</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <span class="shrink-0 mt-0.5" aria-hidden="true">📌</span>
+                    <span>Acesso liberado no celular e computador</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <span class="shrink-0 mt-0.5" aria-hidden="true">📌</span>
+                    <span>Ajuda a manter a ferramenta no ar</span>
+                </li>
             </ul>
 
-            <!-- BOTÃO PRINCIPAL COM SEU NÚMERO -->
             <a href="https://wa.me/5587999513067?text=Fala%20Marcelo!%20Quero%20ajudar%20nos%20custos%20do%20servidor%20e%20liberar%20meu%20acesso%20ao%20Portal%20JM." 
                target="_blank"
-               class="block w-full bg-emerald-500 hover:bg-emerald-600 text-white font-black text-base sm:text-lg py-4 rounded-xl transition-colors shadow-lg">
+               rel="noopener noreferrer"
+               class="block w-full bg-emerald-500 hover:bg-emerald-600 text-white font-black text-[clamp(0.95rem,3vw,1.125rem)] py-4 md:py-5 px-4 rounded-xl md:rounded-2xl transition-colors shadow-[0_4px_14px_0_rgba(16,185,129,0.39)] active:scale-[0.98] active:shadow-none whitespace-normal break-words leading-snug min-h-[56px] flex items-center justify-center text-center">
                 Falar com Marcelo no WhatsApp
             </a>
-            <p class="text-gray-500 text-xs mt-4">Eu crio seu login assim que confirmar a sua participação.</p>
+            <p class="text-gray-500 text-[clamp(0.75rem,2.5vw,0.875rem)] mt-5 md:mt-6 px-2">Eu crio seu login assim que confirmar a sua participação.</p>
         </div>
     </section>
 
-    <footer class="bg-gray-950 py-8 text-center text-gray-600 text-xs">
-        <p>Projeto de Apoio Estudantil - José Marcelo dos Santos &copy; 2026</p>
+    <!-- FOOTER -->
+    <footer class="bg-gray-950 pt-8 pb-[calc(2rem+env(safe-area-inset-bottom))] px-5 text-center text-gray-600 text-[clamp(0.75rem,2vw,0.875rem)] w-full shrink-0">
+        <p class="max-w-sm mx-auto md:max-w-none">Projeto de Apoio Estudantil - José Marcelo dos Santos &copy; 2026</p>
     </footer>
 
-    <!-- BOTÃO FLUTUANTE DO WHATSAPP COM SEU NÚMERO -->
+    <!-- BOTÃO FLUTUANTE DO WHATSAPP -->
     <a href="https://wa.me/5587999513067?text=Fala%20Marcelo!%20Quero%20ajudar%20nos%20custos%20do%20servidor%20e%20liberar%20meu%20acesso%20ao%20Portal%20JM."
        target="_blank"
-       class="fixed bottom-6 right-6 bg-emerald-500 hover:bg-emerald-600 text-white p-4 rounded-full shadow-2xl transition-transform transform hover:scale-110 z-50 flex items-center justify-center">
-        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+       rel="noopener noreferrer"
+       aria-label="Falar com Marcelo no WhatsApp"
+       class="fixed bottom-[calc(1.5rem+env(safe-area-inset-bottom))] right-[calc(1.5rem+env(safe-area-inset-right))] bg-emerald-500 hover:bg-emerald-600 text-white p-3.5 md:p-4 rounded-full shadow-2xl transition-transform transform hover:scale-110 active:scale-95 z-50 flex items-center justify-center min-w-[48px] min-h-[48px]">
+        <svg class="w-7 h-7 md:w-8 md:h-8" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/>
         </svg>
     </a>
