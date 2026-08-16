@@ -3,7 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Políticas Educacionais - Plataforma de Estudos</title>
+    <title>Políticas Educacionais - Portal JM</title>
+    
+    <!-- LIGAÇÃO COM O APLICATIVO (PWA) -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#be185d">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
@@ -592,7 +597,7 @@
             {
                 _d: "D2", unit: "2 (Políticas)", theme: "BNCC: Transversalidade", difficulty: "Médio", type: "Leis/Documentos",
                 question: "A BNCC prevê que urgências contemporâneas afetem a sala de aula de forma transversal, ancoradas em legislações específicas. A Lei nº 10.639/2003 e a Lei nº 11.645/2008 referem-se à obrigatoriedade de abordar qual tema no currículo nacional?",
-                options: ["A) Educação e sinalização para o Trânsito nas vias urbanas.", "B) Educação Ambiental e Práticas de Sustentabilidade.", "C) O estudo e a valorização da História e Cultura Afro-brasileira e Indígena.", "D) Educação Financeira, Empreendedorismo e Direito Fiscal."],
+                options: ["A) Educação e sinalização para o Trânsito nas vias urbanas.", "B) Educação Ambiental e Practices de Sustentabilidade.", "C) O estudo e a valorização da História e Cultura Afro-brasileira e Indígena.", "D) Educação Financeira, Empreendedorismo e Direito Fiscal."],
                 answer: 2, justification: "O quadro de temas transversais do material é claro: as Leis 10.639 e 11.645 representam o marco legal que tornou obrigatório o estudo das Relações Étnico-Raciais e o resgate da História e Cultura Afro-brasileira e Indígena nos currículos escolares."
             },
             {
@@ -715,7 +720,7 @@
             {
                 _d: "D2", unit: "2 (Políticas)", theme: "Organismos Internacionais: Banco Mundial", difficulty: "Médio", type: "Conceitual",
                 question: "A literatura política analisada na disciplina critica abertamente o viés ideológico de entidades de fomento. Para um organismo internacional credor como o Banco Mundial, a liberação intensa de empréstimos em reformas de educação na periferia capitalista é focada primariamente em:",
-                options: ["A) Um senso agudo de caridade franciscana atrelado à doutrinação ecumênica nos rincões mundiais.", "B) Estimular um aumento direto da produtividade econômica nas fábricas, gerando 'qualificação da pobreza' para alimentar o modo de produção do capitalismo transnacional global.", "C) Extinguir os tributos federais e acabar definitivamente com a gestão privada das indústrias petroleiras.", "D) Formar poetas estéticos independentes e artistas reclusos avessos à engrenagem do consumo e empreendedorismo livre."],
+                options: ["A) Um senso agudo de caridade franciscana atrelado à doutrinação ecumênica nos rincões mundiais.", "B) Estimular um aumento direto da produtividade econômica nas fábricas, gerando 'qualificação da pobreza' para alimentar o modo de produção do capitalismo transnacional global.", "C) Extinguir os tributos federal e acabar definitivamente com a gestão privada das indústrias petroleiras.", "D) Formar poetas estéticos independentes e artistas reclusos avessos à engrenagem do consumo e empreendedorismo livre."],
                 answer: 1, justification: "Na lógica gélida do Neoliberalismo e do receituário técnico do Banco Mundial, o foco é essencialmente pragmático/economicista. Não há romantismo: eles investem milhões no Terceiro Mundo sob a ótica de que um indivíduo educado, alfabetizado tecnologicamente vira uma engrenagem produtiva muito mais barata e veloz nas filiais globais de serviço e fábrica, mitigando as tensões cruas de pobreza."
             },
             {
@@ -1199,6 +1204,19 @@
             });
         }
 
+    </script>
+
+    <!-- ========================================== -->
+    <!-- REGISTRO DO SERVICE WORKER (PWA)           -->
+    <!-- ========================================== -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(reg => console.log('Service Worker registrado com sucesso!'))
+                    .catch(err => console.log('Erro ao registrar Service Worker:', err));
+            });
+        }
     </script>
 
     <!-- ========================================== -->
