@@ -6,6 +6,11 @@
     <title>Políticas Educacionais - Plataforma de Estudos</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- SCRIPTS DO FIREBASE AQUI -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; color: #1f2937; }
         .option-btn { transition: all 0.2s ease-in-out; }
@@ -33,43 +38,45 @@
         .theme-hover:hover { border-color: #be185d; color: #be185d; }
     </style>
 
-    <!-- ========================================== -->
-    <!-- CAMADA DE PROTEÇÃO DE CONTEÚDO (CSS)       -->
-    <!-- ========================================== -->
+    <!-- CAMADA DE PROTEÇÃO DE CONTEÚDO (CSS) -->
     <style id="content-protection-styles">
-        /* Bloqueio de seleção de texto (exceto em formulários/inputs) */
         :not(input):not(textarea):not([contenteditable="true"]) {
-            -webkit-touch-callout: none !important;
-            -webkit-user-select: none !important;
-            -khtml-user-select: none !important;
-            -moz-user-select: none !important;
-            -ms-user-select: none !important;
-            user-select: none !important;
+            -webkit-touch-callout: none !important; -webkit-user-select: none !important; -khtml-user-select: none !important; -moz-user-select: none !important; -ms-user-select: none !important; user-select: none !important;
         }
-        
-        /* Bloqueio de arrastar imagens e ícones casuais */
-        img, svg, button {
-            -webkit-user-drag: none !important;
-        }
-
-        /* Proteção base contra tentativa de impressão física ou em PDF (Ctrl+P) */
-        @media print {
-            body {
-                display: none !important;
-                opacity: 0 !important;
-                visibility: hidden !important;
-            }
-        }
+        img, svg, button { -webkit-user-drag: none !important; }
+        @media print { body { display: none !important; opacity: 0 !important; visibility: hidden !important; } }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-2 sm:p-4">
 
-    <div class="w-full max-w-5xl bg-white rounded-2xl shadow-xl overflow-hidden relative" id="app-container">
+    <!-- ========================================== -->
+    <!-- TELA DE LOGIN (FIREBASE)                   -->
+    <!-- ========================================== -->
+    <div id="login-container" class="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden relative p-6 sm:p-8 text-center z-50">
+        <div class="w-16 h-16 bg-pink-100 text-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4"></path></svg>
+        </div>
+        <h2 class="text-2xl font-extrabold text-gray-800 mb-2">Acesso Restrito</h2>
+        <p class="text-gray-500 mb-6 text-sm">Insira suas credenciais.</p>
+        
+        <div class="space-y-4 text-left">
+            <input type="email" id="email-input" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all" placeholder="seu@email.com">
+            <input type="password" id="password-input" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all" placeholder="••••••••">
+            <p id="login-error" class="hidden text-red-500 text-xs font-bold text-center mt-2">Usuário ou senha incorretos.</p>
+            <button onclick="loginFirebase()" id="btn-login" class="w-full bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 rounded-xl transition-all shadow-md mt-2 text-sm sm:text-base">Entrar</button>
+        </div>
+    </div>
+
+    <!-- APP CONTAINER AGORA NASCE HIDDEN -->
+    <div class="w-full max-w-5xl bg-white rounded-2xl shadow-xl overflow-hidden relative hidden" id="app-container">
 
         <!-- ========================================== -->
         <!-- MENU PRINCIPAL DA DISCIPLINA 2 -->
         <!-- ========================================== -->
         <div id="home-screen" class="hidden p-4 sm:p-8 md:p-12 text-center fade-in">
+            <!-- BOTÃO DE SAIR -->
+            <button onclick="logoutFirebase()" class="absolute top-4 right-4 sm:top-6 sm:right-6 text-xs font-bold text-gray-400 hover:text-red-500 transition-colors">Sair da conta</button>
+            
             <div class="theme-bg-light w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center mx-auto mb-4 sm:mb-6 shadow-sm rotate-3">
                 <svg class="w-8 h-8 sm:w-10 sm:h-10 -rotate-3 theme-text" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
             </div>
@@ -445,7 +452,7 @@
             },
             {
                 unit: "3 (Políticas)", title: "Unidade 3: A Organização Escolar e as Políticas", icon: `<svg class="w-6 h-6 sm:w-8 sm:h-8 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>`,
-                content: `<h2 class="text-2xl sm:text-3xl font-extrabold text-amber-700 mb-4 sm:mb-6 border-b-2 border-amber-100 pb-2 sm:pb-3 leading-tight">Políticas Educacionais - Unidade 3</h2><div class="bg-amber-50 border border-amber-100 p-4 sm:p-5 rounded-xl mb-6 sm:mb-8"><h3 class="font-bold text-amber-800 mb-2 text-base sm:text-lg">1. Visão Geral</h3><p class="text-amber-900 text-sm sm:text-base leading-relaxed opacity-90">Chegamos à dinâmica do "chão da escola". Estudaremos as funções dos diferentes atores no cenário prático, a grande ruptura entre a "Administração" tecnocrática e a "Gestão Escolar" democrática amparada pela LDB, e o papel dos colegiados (Conselhos, Grêmios e APPs) na escola participativa.</p></div><h3 class="text-xl sm:text-2xl font-bold text-gray-800 mt-6 sm:mt-8 mb-3 sm:mb-4">2. Papéis na Organização Escolar</h3><div class="space-y-4 sm:space-y-6"><div class="p-4 sm:p-5 bg-white border border-gray-200 rounded-xl shadow-sm text-sm text-gray-700"><ul class="space-y-3"><li><strong>Gestor Escolar (Diretor):</strong> Articula a dimensão administrativa e pedagógica. Deve promover a integração entre as políticas educacionais superiores e o trabalho local.</li><li><strong>Coordenação Pedagógica:</strong> É o "braço direito" dos professores. Dá suporte direto ao trabalho docente, organiza a formação continuada em serviço e garante a execução do currículo.</li><li><strong>Pedagogo (Orientador):</strong> Tem uma visão articuladora dos processos de aprendizagem e da relação escola-família-comunidade.</li></ul></div></div><h3 class="text-xl sm:text-2xl font-bold text-gray-800 mt-8 sm:mt-10 mb-3 sm:mb-4">3. Administração x Gestão</h3><div class="space-y-4 sm:space-y-6"><div class="p-4 sm:p-5 bg-white border border-gray-200 rounded-xl shadow-sm text-sm text-gray-700"><p class="mb-2">A <strong>Administração Escolar</strong>, modelo mais antigo, baseia-se numa racionalidade técnica. O diretor era visto como um burocrata que mandava e os outros obedeciam (modelo piramidal, focado apenas no cumprimento de ordens).</p><p>A <strong>Gestão Escolar</strong>, modelo exigido pela LDB atual, tem raízes na mobilização sociopolítica. Ela pressupõe participação coletiva, foco na qualidade do ensino e democratização das decisões.</p></div></div><h3 class="text-xl sm:text-2xl font-bold text-gray-800 mt-8 sm:mt-10 mb-3 sm:mb-4">4. Mecanismos de Gestão Participativa</h3><div class="space-y-4 sm:space-y-6"><div class="p-4 sm:p-5 bg-white border border-gray-200 rounded-xl shadow-sm text-sm text-gray-700"><p class="mb-3">Para a gestão ser democrática, ela precisa de instâncias coletivas ativas:</p><ul class="list-disc pl-5 space-y-2"><li><strong>Conselho Escolar:</strong> Órgão máximo de deliberação. Composto por direção, professores, pais, alunos e funcionários. Fiscaliza, aprova o Projeto Político Pedagógico e a destinação de verbas.</li><li><strong>Grêmio Estudantil:</strong> Instância de organização política e cultural dos próprios alunos. Garante que os jovens tenham voz nas decisões da escola.</li><li><strong>APP (Associação de Pais e Professores):</strong> Focada na articulação financeira, cultural e social entre família e a estrutura física/pedagógica.</li><li><strong>Avaliação Institucional:</strong> Não é apenas dar notas aos alunos; é a escola olhar para si mesma (autoavaliação), identificar falhas no currículo, na infraestrutura e no ensino para planejar melhorias reais.</li></ul></div></div>`
+                content: `<h2 class="text-2xl sm:text-3xl font-extrabold text-amber-700 mb-4 sm:mb-6 border-b-2 border-amber-100 pb-2 sm:pb-3 leading-tight">Políticas Educacionais - Unidade 3</h2><div class="bg-amber-50 border border-amber-100 p-4 sm:p-5 rounded-xl mb-6 sm:mb-8"><h3 class="font-bold text-amber-800 mb-2 text-base sm:text-lg">1. Visão Geral</h3><p class="text-amber-900 text-sm sm:text-base leading-relaxed opacity-90">Chegamos à dinâmica do "chão da escola". Estudaremos as funções dos diferentes atores no cenário prático, a grande ruptura entre a "Administração" tecnocrática e a "Gestão Escolar" democrática amparada pela LDB, e o papel dos colegiados (Conselhos, Grêmios e APPs) na escola participativa.</p></div><h3 class="text-xl sm:text-2xl font-bold text-gray-800 mt-6 sm:mt-8 mb-3 sm:mb-4">2. Papéis na Organização Escolar</h3><div class="space-y-4 sm:space-y-6"><div class="p-4 sm:p-5 bg-white border border-gray-200 rounded-xl shadow-sm text-sm text-gray-700"><ul class="space-y-3"><li><strong>Gestor Escolar (Diretor):</strong> Articula a dimensão administrativa e pedagógica. Deve promover a integração entre as políticas educacionais superiores e o trabalho local.</li><li><strong>Coordenação Pedagógica:</strong> É o "braço direito" dos professores. Dá suporte direto ao trabalho docente, organiza a formação continuada em serviço e garante a execução do currículo.</li><li><strong>Pedagogo (Orientador):</strong> Tem uma visão articuladora dos processos de aprendizagem e da relação escola-família-comunidade.</li></ul></div></div><h3 class="text-xl sm:text-2xl font-bold text-gray-800 mt-8 sm:mt-10 mb-3 sm:mb-4">3. Administração x Gestão</h3><div class="space-y-4 sm:space-y-6"><div class="p-4 sm:p-5 bg-white border border-gray-200 rounded-xl shadow-sm text-sm text-gray-700"><p class="mb-2">A <strong>Administração Escolar</strong>, modelo mais antigo, baseia-se numa racionalidade técnica. O diretor era visto como burocrata que mandava e os outros obedeciam (modelo piramidal, focado apenas no cumprimento de ordens).</p><p>A <strong>Gestão Escolar</strong>, modelo exigido pela LDB atual, tem raízes na mobilização sociopolítica. Ela pressupõe participação coletiva, foco na qualidade do ensino e democratização das decisões.</p></div></div><h3 class="text-xl sm:text-2xl font-bold text-gray-800 mt-8 sm:mt-10 mb-3 sm:mb-4">4. Mecanismos de Gestão Participativa</h3><div class="space-y-4 sm:space-y-6"><div class="p-4 sm:p-5 bg-white border border-gray-200 rounded-xl shadow-sm text-sm text-gray-700"><p class="mb-3">Para a gestão ser democrática, ela precisa de instâncias coletivas ativas:</p><ul class="list-disc pl-5 space-y-2"><li><strong>Conselho Escolar:</strong> Órgão máximo de deliberação. Composto por direção, professores, pais, alunos e funcionários. Fiscaliza, aprova o Projeto Político Pedagógico e a destinação de verbas.</li><li><strong>Grêmio Estudantil:</strong> Instância de organização política e cultural dos próprios alunos. Garante que os jovens tenham voz nas decisões da escola.</li><li><strong>APP (Associação de Pais e Professores):</strong> Focada na articulação financeira, cultural e social entre família e a estrutura física/pedagógica.</li><li><strong>Avaliação Institucional:</strong> Não é apenas dar notas aos alunos; é a escola olhar para si mesma (autoavaliação), identificar falhas no currículo, na infraestrutura e no ensino para planejar melhorias reais.</li></ul></div></div>`
             }
         ];
 
@@ -1143,11 +1150,55 @@
             html += `</div></div>`; container.innerHTML = html;
         }
 
-        window.onload = () => { 
-            loadAppData(); 
-            document.body.classList.add('theme-d2');
-            showHome(); 
+        /* ==========================================
+           LÓGICA DE AUTENTICAÇÃO FIREBASE
+           ========================================== */
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyB2y3oKHF4mD0mo1Xmu4euo1XKbD5BOkJ8",
+            authDomain: "sistema-disciplina.firebaseapp.com",
+            projectId: "sistema-disciplina",
+            storageBucket: "sistema-disciplina.firebasestorage.app",
+            messagingSenderId: "141730130398",
+            appId: "1:141730130398:web:48b813a785479dda21954f"
         };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                document.getElementById('login-container').classList.add('hidden');
+                document.getElementById('app-container').classList.remove('hidden');
+                loadAppData(); 
+                document.body.classList.add('theme-d2');
+                showHome(); 
+            } else {
+                document.getElementById('app-container').classList.add('hidden');
+                document.getElementById('login-container').classList.remove('hidden');
+            }
+        });
+
+        function loginFirebase() {
+            const email = document.getElementById('email-input').value;
+            const password = document.getElementById('password-input').value;
+            document.getElementById('btn-login').innerText = "Verificando...";
+            document.getElementById('login-error').classList.add('hidden');
+
+            auth.signInWithEmailAndPassword(email, password).catch((error) => {
+                document.getElementById('btn-login').innerText = "Entrar";
+                document.getElementById('login-error').innerText = "Usuário ou senha incorretos.";
+                document.getElementById('login-error').classList.remove('hidden');
+            });
+        }
+
+        function logoutFirebase() {
+            auth.signOut().then(() => {
+                document.getElementById('email-input').value = '';
+                document.getElementById('password-input').value = '';
+            });
+        }
+
     </script>
 
     <!-- ========================================== -->
@@ -1155,83 +1206,31 @@
     <!-- ========================================== -->
     <script id="content-protection-script">
         (function() {
-            // Função auxiliar para verificar se o elemento atualizado é ou está dentro de um input/textarea.
-            // Impede a quebra de formulários em que a digitação, cópia ou clique direito sejam vitais.
             function isInput(el) {
                 if (!el) return false;
                 const tagName = el.tagName ? el.tagName.toLowerCase() : '';
                 return tagName === 'input' || tagName === 'textarea' || tagName === 'select' || el.isContentEditable;
             }
 
-            // 1. Bloqueio de Menu de Contexto (Inspecionar, Salvar como, etc.)
-            document.addEventListener('contextmenu', function(e) {
-                if (!isInput(e.target)) {
-                    e.preventDefault();
-                }
-            }, { passive: false });
+            document.addEventListener('contextmenu', function(e) { if (!isInput(e.target)) { e.preventDefault(); } }, { passive: false });
+            document.addEventListener('copy', function(e) { if (!isInput(e.target)) { e.preventDefault(); if (e.clipboardData) { e.clipboardData.clearData(); } } }, { passive: false });
+            document.addEventListener('cut', function(e) { if (!isInput(e.target)) { e.preventDefault(); if (e.clipboardData) { e.clipboardData.clearData(); } } }, { passive: false });
+            document.addEventListener('dragstart', function(e) { if (!isInput(e.target)) { e.preventDefault(); } }, { passive: false });
+            document.addEventListener('drop', function(e) { if (!isInput(e.target)) { e.preventDefault(); } }, { passive: false });
 
-            // 2. Interceptação agressiva da Área de Transferência (Copiar/Cortar)
-            document.addEventListener('copy', function(e) {
-                if (!isInput(e.target)) {
-                    e.preventDefault();
-                    if (e.clipboardData) {
-                        e.clipboardData.clearData();
-                    }
-                }
-            }, { passive: false });
-
-            document.addEventListener('cut', function(e) {
-                if (!isInput(e.target)) {
-                    e.preventDefault();
-                    if (e.clipboardData) {
-                        e.clipboardData.clearData();
-                    }
-                }
-            }, { passive: false });
-
-            // 3. Bloqueio contra extração casual via Drag and Drop
-            document.addEventListener('dragstart', function(e) {
-                if (!isInput(e.target)) {
-                    e.preventDefault();
-                }
-            }, { passive: false });
-            
-            document.addEventListener('drop', function(e) {
-                if (!isInput(e.target)) {
-                    e.preventDefault();
-                }
-            }, { passive: false });
-
-            // 4. Mapeamento e Bloqueio de Atalhos de Teclado no nível do Documento
             document.addEventListener('keydown', function(e) {
-                // Detecta ambiente Mac e Windows
                 const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
                 const modifier = isMac ? e.metaKey : e.ctrlKey;
                 const key = e.key ? e.key.toLowerCase() : '';
 
-                // Proteção 4.1: Bloqueia F12 (Acesso casual ao DevTools)
-                if (e.key === 'F12') {
-                    e.preventDefault();
-                    return;
-                }
+                if (e.key === 'F12') { e.preventDefault(); return; }
 
-                // Proteção 4.2: Bloqueia os atalhos de controle (A, C, U, S, P)
                 if (modifier) {
                     if (['c', 'a', 'u', 's', 'p'].includes(key)) {
-                        // Permite apenas Ctrl+C / Ctrl+A se o aluno estiver ativamente dentro de um campo de digitação válido
-                        if ((key === 'c' || key === 'a') && isInput(e.target)) {
-                            return;
-                        }
-                        e.preventDefault();
-                        return;
+                        if ((key === 'c' || key === 'a') && isInput(e.target)) { return; }
+                        e.preventDefault(); return;
                     }
-
-                    // Proteção 4.3: Bloqueia atalhos secundários de Inspecionar Elemento
-                    // (Ctrl+Shift+I/J/C) Windows/Linux | (Cmd+Option+I/J/C) macOS
-                    if ((e.shiftKey || e.altKey) && ['i', 'j', 'c'].includes(key)) {
-                        e.preventDefault();
-                        return;
-                    }
+                    if ((e.shiftKey || e.altKey) && ['i', 'j', 'c'].includes(key)) { e.preventDefault(); return; }
                 }
             }, { passive: false });
         })();
