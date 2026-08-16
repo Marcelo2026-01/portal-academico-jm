@@ -1,11 +1,17 @@
 {
   "name": "Portal Acadêmico JM",
   "short_name": "Portal JM",
-  "start_url": "/index.html",
+  "start_url": "/app.html",
   "display": "standalone",
-  "background_color": "#ffffff",
+  "background_color": "#f3f4f6",
   "theme_color": "#be185d",
+  "orientation": "portrait",
   "icons": [
+    {
+      "src": "icone-48.png",
+      "sizes": "48x48",
+      "type": "image/png"
+    },
     {
       "src": "icone-512.png",
       "sizes": "512x512",
