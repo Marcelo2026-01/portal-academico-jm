@@ -76,6 +76,79 @@
     <div class="w-full max-w-5xl bg-white rounded-2xl shadow-xl overflow-hidden relative hidden" id="app-container">
 
         <!-- ========================================== -->
+        <!-- TELA DE BOAS-VINDAS / ORIENTAÇÃO INICIAL   -->
+        <!-- ========================================== -->
+        <div id="welcome-screen" class="hidden p-6 sm:p-8 md:p-12 fade-in relative h-[85vh] sm:h-[80vh] overflow-y-auto custom-scrollbar bg-gray-50">
+            <div class="max-w-2xl mx-auto">
+                <div class="text-center mb-8">
+                    <div class="w-16 h-16 sm:w-20 sm:h-20 bg-pink-100 text-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm">
+                        <span class="text-3xl sm:text-4xl">📚</span>
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-800 mb-2 tracking-tight">SUA PREPARAÇÃO COMEÇA AQUI</h2>
+                    <p class="text-gray-500 text-sm sm:text-base">Esta é uma ferramenta complementar criada para ajudar você a estudar, revisar e praticar os conteúdos da sua disciplina.</p>
+                </div>
+
+                <div class="space-y-6">
+                    <div class="bg-amber-50 border border-amber-200 p-5 sm:p-6 rounded-2xl shadow-sm relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1.5 h-full bg-amber-400"></div>
+                        <h3 class="text-base sm:text-lg font-bold text-amber-900 mb-2 flex items-center gap-2">
+                            <span class="text-xl">🤝</span> DE ALUNO PARA ALUNO
+                        </h3>
+                        <p class="text-amber-800 text-sm sm:text-base leading-relaxed">
+                            Eu também sou aluno e desenvolvi esse sistema com uma única ideia: ajudar a nossa turma a revisar e fechar a prova. Mas atenção: isso aqui é o nosso <b>material de apoio</b>. Não deixem de acessar a plataforma oficial da faculdade para acompanhar as aulas, comunicados e não perder os prazos, beleza?
+                        </p>
+                    </div>
+
+                    <div class="bg-white border-2 border-gray-100 p-5 sm:p-6 rounded-2xl shadow-sm">
+                        <h3 class="text-base sm:text-lg font-bold text-gray-800 mb-5 flex items-center gap-2">
+                            <span class="text-xl">💡</span> USE ESTA FERRAMENTA PARA REFORÇAR SEUS ESTUDOS
+                        </h3>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="flex items-start gap-3">
+                                <div class="bg-gray-50 p-2 rounded-lg text-lg shrink-0 border border-gray-100">📖</div>
+                                <div>
+                                    <h4 class="font-bold text-gray-800 text-sm">Estude</h4>
+                                    <p class="text-gray-500 text-xs sm:text-sm">Revise os conteúdos pelo guia de estudo.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <div class="bg-gray-50 p-2 rounded-lg text-lg shrink-0 border border-gray-100">📝</div>
+                                <div>
+                                    <h4 class="font-bold text-gray-800 text-sm">Pratique</h4>
+                                    <p class="text-gray-500 text-xs sm:text-sm">Responda questões e confira as justificativas.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <div class="bg-gray-50 p-2 rounded-lg text-lg shrink-0 border border-gray-100">🎯</div>
+                                <div>
+                                    <h4 class="font-bold text-gray-800 text-sm">Simule</h4>
+                                    <p class="text-gray-500 text-xs sm:text-sm">Teste seus conhecimentos com os simulados.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <div class="bg-gray-50 p-2 rounded-lg text-lg shrink-0 border border-gray-100">📊</div>
+                                <div>
+                                    <h4 class="font-bold text-gray-800 text-sm">Acompanhe</h4>
+                                    <p class="text-gray-500 text-xs sm:text-sm">Identifique os assuntos que precisam de mais revisão.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 text-center pb-4 sm:pb-0">
+                    <button onclick="dismissWelcomeScreen()" class="w-full sm:w-auto bg-pink-600 hover:bg-pink-700 text-white font-bold py-3.5 sm:py-4 px-6 sm:px-8 rounded-xl transition-all shadow-lg text-sm sm:text-base flex items-center justify-center gap-2 mx-auto transform hover:-translate-y-0.5">
+                        ✓ ENTENDI — COMEÇAR A ESTUDAR
+                    </button>
+                    <p class="text-xs text-gray-400 mt-4 sm:mt-5 max-w-md mx-auto">
+                        Esta ferramenta é complementar e não substitui a plataforma oficial, as aulas, os materiais ou as orientações da sua instituição.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
         <!-- MENU PRINCIPAL DA DISCIPLINA 2 -->
         <!-- ========================================== -->
         <div id="home-screen" class="hidden p-4 sm:p-8 md:p-12 text-center fade-in">
@@ -133,6 +206,11 @@
                         <p class="text-gray-500 text-xs sm:text-sm">Métricas e pontos fortes do seu desenvolvimento.</p>
                     </div>
                 </button>
+            </div>
+            
+            <!-- Link para reabrir a Orientação Inicial -->
+            <div class="text-center mt-8 sm:mt-10">
+                <button onclick="showWelcomeScreen()" class="text-xs text-gray-400 hover:text-pink-600 underline transition-colors">Ver orientação inicial</button>
             </div>
         </div>
 
@@ -502,7 +580,7 @@
                 _d: "D2", unit: "1 (Políticas)", theme: "LDB: Obrigatoriedade", difficulty: "Fácil", type: "Conceitual",
                 question: "Conforme a Emenda Constitucional nº 59/2009 e a redação da LDB 9.394/1996, a Educação Básica obrigatória e gratuita abrange qual faixa etária e quais etapas de ensino no Brasil?",
                 options: ["A) Dos 6 aos 14 anos, compreendendo apenas o Ensino Fundamental.", "B) Dos 4 aos 17 anos, compreendendo a Pré-escola, o Ensino Fundamental e o Ensino Médio.", "C) Dos 0 aos 17 anos, compreendendo a Creche, Pré-escola, Ensino Fundamental e Ensino Médio.", "D) Dos 4 aos 14 anos, compreendendo a Educação Infantil e o Ensino Fundamental."],
-                answer: 1, justification: "A educação básica obrigatória abrange a faixa dos 4 aos 17 anos de idade, o que inclui obrigatoriamente a Pré-escola (4 a 5 anos), o Ensino Fundamental (9 anos) e o Ensino Médio (3 anos). A creche (0 a 3 anos) é um direito garantido pelo Estado, mas a matrícula não é de caráter obrigatório para as famílias."
+                answer: 1, justification: "A educação básica obrigatória abrange a faixa dos 4 aos 17 anos de idade, o que inclui obrigatoriamente a Pré-escola (4 a 5 বাঙ্গ), o Ensino Fundamental (9 anos) e o Ensino Médio (3 anos). A creche (0 a 3 anos) é um direito garantido pelo Estado, mas a matrícula não é de caráter obrigatório para as famílias."
             },
             {
                 _d: "D2", unit: "1 (Políticas)", theme: "Incumbências na LDB 9.394/96", difficulty: "Difícil", type: "Afirmativas",
@@ -560,7 +638,7 @@
             },
             {
                 _d: "D2", unit: "2 (Políticas)", theme: "Organismos Internacionais", difficulty: "Médio", type: "Asserção e Razão",
-                question: "Sobre o papel das agências de crédito na educação, avalie as asserções a seguir e a relação lógica entre elas:\n\nI. Organizações internacionais, a exemplo do Banco Mundial, frequentemente vinculam seus aportes e empréstimos financeiros à implementação de reformas educacionais nos países em desenvolvimento.\nPORQUE\nII. Na ótica da globalização econômica, a reestruturação produtiva do país requer a formação de um novo perfil de trabalhador, o que exige adequação curricular e avaliações rigorosas do sistema de ensino.",
+                question: "Sobre o papel das agências de crédito na educação, avalie as asserções a seguir e a relação lógica entre elas:\n\nI. Organizações internacionais, a exemplo do Banco Mundial, frequentemente vinculam seus aportes e empréstimos financeiros à implementação de reformas educacionais nos países em desenvolvimento.\nPORQUE\nII. Na ótica da globalização econômica, a reestruturação produtiva do país requer a formação de novo perfil de trabalhador, o que exige adequação curricular e avaliações rigorosas do sistema de ensino.",
                 options: ["A) As duas são verdadeiras e II justifica I.", "B) As duas são verdadeiras, mas II não justifica I.", "C) I é verdadeira e II é falsa.", "D) I é falsa e II é verdadeira."],
                 answer: 0, justification: "As duas asserções são verdadeiras e complementares. O neoliberalismo e a globalização demandam um trabalhador flexível e qualificado para girar a engrenagem econômica (Razão II). É exatamente para garantir a formação dessa mão de obra produtiva que instituições como o Banco Mundial pressionam por reformas curriculares e atrelam isso à liberação de recursos para o Terceiro Mundo (Asserção I)."
             },
@@ -584,7 +662,7 @@
             },
             {
                 _d: "D2", unit: "2 (Políticas)", theme: "BNCC: 10 Competências", difficulty: "Difícil", type: "Afirmativas",
-                question: "A BNCC estrutura-se na premissa do desenvolvimento de 10 Competências Gerais que os estudantes devem consolidar ao longo de toda a Educação Básica. Analise os itens abaixo e identifique quais correspondem a matrizes dessas competências:\n\nI. Pensamento Científico, Crítico e Criativo.\nII. Repertório Cultural e Comunicação.\nIII. Treinamento Específico para o Serviço Militar.\nIV. Autoconhecimento, Autocuidado e Empatia.",
+                question: "A BNCC estrutura-se na premissa do desenvolvimento de 10 Competências Gerais que os estudantes devem consolidar ao longo de toda a Educação Básica. Analise os items abaixo e identifique quais correspondem a matrizes dessas competências:\n\nI. Pensamento Científico, Crítico e Criativo.\nII. Repertório Cultural e Comunicação.\nIII. Treinamento Específico para o Serviço Militar.\nIV. Autoconhecimento, Autocuidado e Empatia.",
                 options: ["A) I, II e III, apenas.", "B) I, II e IV, apenas.", "C) II e IV, apenas.", "D) I, II, III e IV."],
                 answer: 1, justification: "As competências 2 (Pensamento científico/crítico), 3 (Repertório cultural), 4 (Comunicação) e 8/9 (Autoconhecimento, autocuidado e empatia) fazem parte explícita da lista oficial das 10 competências da BNCC. Treinamento militar não compõe a matriz pedagógica da Educação Básica nacional."
             },
@@ -803,6 +881,7 @@
 
         function saveAppData() { localStorage.setItem('studyApp_progress', JSON.stringify(appData)); }
 
+        const welcomeScreenEl = document.getElementById('welcome-screen');
         const homeScreenEl = document.getElementById('home-screen');
         const studyGuidesMenuEl = document.getElementById('study-guides-menu'); const studyGuideViewerEl = document.getElementById('study-guide-viewer');
         const quizModesMenuEl = document.getElementById('quiz-modes-menu'); const headerEl = document.getElementById('header');
@@ -815,10 +894,22 @@
         const nextBtnEl = document.getElementById('next-btn');
 
         function hideAllScreens() {
+            welcomeScreenEl.classList.add('hidden');
             homeScreenEl.classList.add('hidden'); studyGuidesMenuEl.classList.add('hidden');
             studyGuideViewerEl.classList.add('hidden'); quizModesMenuEl.classList.add('hidden'); headerEl.classList.add('hidden');
             quizAreaEl.classList.add('hidden'); resultAreaEl.classList.add('hidden'); errorDashboardAreaEl.classList.add('hidden');
             errorDetailAreaEl.classList.add('hidden'); performanceAreaEl.classList.add('hidden');
+        }
+
+        function showWelcomeScreen() {
+            hideAllScreens();
+            welcomeScreenEl.classList.remove('hidden');
+            window.scrollTo(0,0);
+        }
+
+        function dismissWelcomeScreen() {
+            localStorage.setItem('studyWelcomeSeen', 'true');
+            showHome();
         }
 
         function showHome() { hideAllScreens(); homeScreenEl.classList.remove('hidden'); window.scrollTo(0,0); }
@@ -1177,7 +1268,14 @@
                 document.getElementById('app-container').classList.remove('hidden');
                 loadAppData(); 
                 document.body.classList.add('theme-d2');
-                showHome(); 
+                
+                // VERIFICA SE O ALUNO JÁ VIU A ORIENTAÇÃO INICIAL
+                if (localStorage.getItem('studyWelcomeSeen') === 'true') {
+                    showHome(); 
+                } else {
+                    showWelcomeScreen();
+                }
+
             } else {
                 document.getElementById('app-container').classList.add('hidden');
                 document.getElementById('login-container').classList.remove('hidden');
